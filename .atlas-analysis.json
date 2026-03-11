@@ -1,0 +1,59 @@
+{
+  "projectType": "frontend",
+  "projectName": "Solarecliente",
+  "projectDescription": "A client management frontend application for managing customer data and interactions",
+  "theme": "almond",
+  "primaryColor": "#4F46E5",
+  "lightColor": "#818CF8",
+  "darkColor": "#3730A3",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": ["introduction", "quickstart", "installation"]
+          },
+          {
+            "group": "Core Features",
+            "pages": ["features/client-management", "features/dashboard", "features/data-visualization"]
+          },
+          {
+            "group": "Components",
+            "pages": ["components/overview", "components/forms", "components/tables", "components/navigation"]
+          },
+          {
+            "group": "Guides",
+            "pages": ["guides/configuration", "guides/customization", "guides/deployment"]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "API",
+            "pages": ["api/overview", "api/authentication", "api/endpoints"]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Client data management",
+    "Interactive dashboard",
+    "Data visualization",
+    "User authentication",
+    "Responsive design",
+    "Real-time updates"
+  ],
+  "publicApiSurface": [
+    "Client management interface",
+    "Dashboard components",
+    "Form components",
+    "Data table components",
+    "Navigation components",
+    "Authentication module"
+  ]
+}
