@@ -1,0 +1,189 @@
+---
+title: 'Component Library Overview'
+description: 'A comprehensive overview of Solarecliente UI components'
+icon: 'layer-group'
+---
+
+## Introduction
+
+Solarecliente includes a robust component library built with React and TypeScript, designed to provide a consistent and professional user experience across the application. All components are built with accessibility, responsiveness, and maintainability in mind.
+
+## Component Architecture
+
+Our component library follows a modular architecture that promotes reusability and consistency:
+
+<CardGroup cols={2}>
+  <Card title="Form Components" icon="file-input" href="/components/forms">
+    Input fields, selectors, validation, and form handling utilities
+  </Card>
+  <Card title="Table Components" icon="table" href="/components/tables">
+    Data grids, sorting, filtering, and pagination functionality
+  </Card>
+  <Card title="Navigation Components" icon="compass" href="/components/navigation">
+    Menus, breadcrumbs, tabs, and navigation utilities
+  </Card>
+  <Card title="Layout Components" icon="columns">
+    Grid systems, containers, and responsive layout helpers
+  </Card>
+</CardGroup>
+
+## Design Principles
+
+### Consistency
+All components follow a unified design language with consistent spacing, colors, and typography.
+
+### Accessibility
+Components are built with WCAG 2.1 AA compliance, including:
+- Proper ARIA labels and roles
+- Keyboard navigation support
+- Screen reader compatibility
+- Focus management
+
+### Responsiveness
+Every component is designed to work seamlessly across desktop, tablet, and mobile devices.
+
+### Type Safety
+All components are built with TypeScript and include comprehensive type definitions.
+
+## Getting Started
+
+### Basic Import
+
+```typescript
+import { Button, Input, Select } from '@/components/ui';
+import { DataTable } from '@/components/tables';
+import { MainNav } from '@/components/navigation';
+```
+
+### Component Props
+
+All components accept standard HTML attributes plus custom props:
+
+```typescript
+interface BaseComponentProps {
+  className?: string;
+  testId?: string;
+  disabled?: boolean;
+}
+```
+
+## Theming
+
+Components use CSS variables for theming, allowing easy customization:
+
+```typescript
+// theme.config.ts
+export const theme = {
+  colors: {
+    primary: '#2563eb',
+    secondary: '#64748b',
+    success: '#10b981',
+    warning: '#f59e0b',
+    danger: '#ef4444',
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+  },
+  borderRadius: {
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+  },
+};
+```
+
+## Component Composition
+
+Components are designed to work together seamlessly:
+
+```typescript
+import { Form, Input, Select, Button } from '@/components/ui';
+
+function ClientForm() {
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Input
+        name="name"
+        label="Client Name"
+        required
+      />
+      <Select
+        name="status"
+        label="Status"
+        options={statusOptions}
+      />
+      <Button type="submit" variant="primary">
+        Save Client
+      </Button>
+    </Form>
+  );
+}
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Semantic Props" icon="tags">
+    Prefer semantic props like `variant="primary"` over custom styling
+  </Card>
+  <Card title="Type Checking" icon="shield-check">
+    Always define proper TypeScript interfaces for component props
+  </Card>
+  <Card title="Error Boundaries" icon="circle-exclamation">
+    Wrap components in error boundaries for graceful failure handling
+  </Card>
+  <Card title="Testing" icon="vial">
+    Write unit tests for all custom components using React Testing Library
+  </Card>
+</CardGroup>
+
+## Performance Optimization
+
+### Lazy Loading
+
+```typescript
+import { lazy, Suspense } from 'react';
+
+const DataTable = lazy(() => import('@/components/tables/DataTable'));
+
+function ClientList() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <DataTable data={clients} />
+    </Suspense>
+  );
+}
+```
+
+### Memoization
+
+```typescript
+import { memo } from 'react';
+
+const ClientCard = memo(({ client }) => {
+  return (
+    <div className="client-card">
+      <h3>{client.name}</h3>
+      <p>{client.email}</p>
+    </div>
+  );
+});
+```
+
+## Next Steps
+
+<CardGroup cols={3}>
+  <Card title="Form Components" icon="file-input" href="/components/forms">
+    Learn about form inputs and validation
+  </Card>
+  <Card title="Table Components" icon="table" href="/components/tables">
+    Explore data table features
+  </Card>
+  <Card title="Navigation" icon="compass" href="/components/navigation">
+    Implement navigation patterns
+  </Card>
+</CardGroup>

@@ -1,0 +1,776 @@
+---
+title: 'Data Visualization'
+description: 'Interactive charts, graphs, and visual analytics for client data'
+icon: 'chart-mixed'
+---
+
+## Overview
+
+Solarecliente provides powerful data visualization capabilities that transform raw client data into actionable insights. Create interactive charts, analyze trends, and discover patterns through intuitive visual representations.
+
+<CardGroup cols={2}>
+  <Card title="Chart Types" icon="chart-column" href="#chart-types">
+    Multiple visualization formats for different data types
+  </Card>
+  <Card title="Interactive Filters" icon="filter" href="#interactive-filtering">
+    Drill down into data with dynamic filtering capabilities
+  </Card>
+  <Card title="Custom Dashboards" icon="grip" href="#custom-visualizations">
+    Build personalized visual analytics dashboards
+  </Card>
+  <Card title="Export & Share" icon="share-nodes" href="#sharing-visualizations">
+    Share insights with team members and stakeholders
+  </Card>
+</CardGroup>
+
+## Chart Types
+
+Solarecliente supports various chart types optimized for different data analysis scenarios.
+
+### Line Charts
+
+Ideal for tracking trends and changes over time.
+
+```typescript
+interface LineChartConfig {
+  type: 'line';
+  data: {
+    labels: string[];           // Time periods
+    datasets: [
+      {
+        label: string;
+        data: number[];
+        borderColor: string;
+        backgroundColor: string;
+        tension: number;         // Curve smoothness
+      }
+    ];
+  };
+  options: {
+    responsive: boolean;
+    scales: {
+      y: { beginAtZero: boolean };
+    };
+  };
+}
+
+const revenueChart: LineChartConfig = {
+  type: 'line',
+  data: {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    datasets: [
+      {
+        label: 'Monthly Revenue',
+        data: [95000, 102000, 98000, 115000, 125000, 132000],
+        borderColor: 'rgb(59, 130, 246)',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        tension: 0.4
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: { beginAtZero: true }
+    }
+  }
+};
+```
+
+<Tabs>
+  <Tab title="Revenue Trends">
+    Track revenue growth, MRR, ARR, and financial metrics over time.
+    
+    **Use Cases:**
+    - Monthly recurring revenue (MRR) tracking
+    - Year-over-year revenue comparison
+    - Revenue forecasting and projections
+    - Contract value trends
+  </Tab>
+  
+  <Tab title="Client Growth">
+    Monitor client acquisition, retention, and churn rates.
+    
+    **Use Cases:**
+    - New client acquisition trends
+    - Active client count over time
+    - Churn rate analysis
+    - Client lifetime value progression
+  </Tab>
+  
+  <Tab title="Engagement Metrics">
+    Visualize client activity and engagement patterns.
+    
+    **Use Cases:**
+    - Average response time trends
+    - Interaction frequency
+    - Support ticket volume
+    - Feature usage over time
+  </Tab>
+</Tabs>
+
+### Bar Charts
+
+Compare values across different categories or time periods.
+
+```typescript
+const clientsByIndustry = {
+  type: 'bar',
+  data: {
+    labels: ['Technology', 'Finance', 'Healthcare', 'Retail', 'Manufacturing'],
+    datasets: [
+      {
+        label: 'Number of Clients',
+        data: [67, 45, 38, 29, 23],
+        backgroundColor: [
+          'rgba(59, 130, 246, 0.8)',
+          'rgba(16, 185, 129, 0.8)',
+          'rgba(245, 158, 11, 0.8)',
+          'rgba(239, 68, 68, 0.8)',
+          'rgba(139, 92, 246, 0.8)'
+        ]
+      }
+    ]
+  },
+  options: {
+    indexAxis: 'y',              // Horizontal bars
+    responsive: true
+  }
+};
+```
+
+<CardGroup cols={2}>
+  <Card title="Client Distribution" icon="building">
+    Visualize client counts by industry, region, or segment
+  </Card>
+  <Card title="Revenue Breakdown" icon="coins">
+    Compare revenue across products, services, or time periods
+  </Card>
+  <Card title="Activity Volume" icon="chart-simple">
+    Analyze communication volume by type or team member
+  </Card>
+  <Card title="Status Comparison" icon="scale-balanced">
+    Compare metrics across different client statuses
+  </Card>
+</CardGroup>
+
+### Pie & Donut Charts
+
+Show proportions and percentage distributions.
+
+```typescript
+const clientStatusDistribution = {
+  type: 'doughnut',
+  data: {
+    labels: ['Active', 'Prospective', 'Inactive', 'Churned'],
+    datasets: [
+      {
+        data: [231, 45, 16, 8],
+        backgroundColor: [
+          '#10b981',    // Green for Active
+          '#3b82f6',    // Blue for Prospective
+          '#6b7280',    // Gray for Inactive
+          '#ef4444'     // Red for Churned
+        ],
+        borderWidth: 2,
+        borderColor: '#ffffff'
+      }
+    ]
+  },
+  options: {
+    cutout: '60%',               // Donut hole size
+    plugins: {
+      legend: {
+        position: 'right'
+      }
+    }
+  }
+};
+```
+
+<Info>
+  **Best Practices:** Use pie charts for datasets with 5 or fewer categories. For more categories, consider using a bar chart instead.
+</Info>
+
+### Area Charts
+
+Emphasize magnitude and cumulative trends.
+
+```typescript
+const cumulativeRevenue = {
+  type: 'line',
+  data: {
+    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    datasets: [
+      {
+        label: 'Product A',
+        data: [250000, 520000, 810000, 1100000],
+        fill: true,
+        backgroundColor: 'rgba(59, 130, 246, 0.3)'
+      },
+      {
+        label: 'Product B',
+        data: [180000, 380000, 600000, 850000],
+        fill: true,
+        backgroundColor: 'rgba(16, 185, 129, 0.3)'
+      }
+    ]
+  },
+  options: {
+    scales: {
+      y: {
+        stacked: true           // Stack areas
+      }
+    }
+  }
+};
+```
+
+### Scatter Plots
+
+Identify correlations and patterns between two variables.
+
+```typescript
+const clientEngagementAnalysis = {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {
+        label: 'Client Distribution',
+        data: [
+          { x: 95, y: 125000 },   // x: Engagement Score, y: Revenue
+          { x: 87, y: 98000 },
+          { x: 72, y: 67000 },
+          { x: 91, y: 112000 },
+          // ... more data points
+        ],
+        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+        pointRadius: 6
+      }
+    ]
+  },
+  options: {
+    scales: {
+      x: { title: { display: true, text: 'Engagement Score' } },
+      y: { title: { display: true, text: 'Annual Revenue' } }
+    }
+  }
+};
+```
+
+<Note>
+  Scatter plots are excellent for identifying outliers, correlations, and clusters in your client data.
+</Note>
+
+## Interactive Filtering
+
+All visualizations support interactive filtering to drill down into specific data segments.
+
+### Filter Controls
+
+<Steps>
+  <Step title="Select Time Range">
+    Choose the date range for your analysis.
+    
+    ```javascript
+    const timeFilter = {
+      type: 'date-range',
+      start: '2024-01-01',
+      end: '2024-03-31',
+      presets: ['7d', '30d', '90d', '1y', 'custom']
+    };
+    ```
+  </Step>
+  
+  <Step title="Apply Dimension Filters">
+    Filter by client attributes like status, industry, or location.
+    
+    ```javascript
+    const dimensionFilters = {
+      status: ['Active', 'Prospective'],
+      industry: ['Technology', 'Finance'],
+      region: ['North America']
+    };
+    ```
+  </Step>
+  
+  <Step title="Set Value Thresholds">
+    Filter by numeric ranges like revenue or engagement scores.
+    
+    ```javascript
+    const valueFilters = {
+      revenue: { min: 50000, max: 500000 },
+      engagementScore: { min: 70 }
+    };
+    ```
+  </Step>
+  
+  <Step title="Combine Multiple Filters">
+    Apply complex filter combinations for precise analysis.
+    
+    ```javascript
+    const combinedFilters = {
+      operator: 'AND',
+      conditions: [
+        { field: 'status', op: 'in', value: ['Active'] },
+        { field: 'revenue', op: 'gte', value: 100000 },
+        { field: 'engagementScore', op: 'gte', value: 80 }
+      ]
+    };
+    ```
+  </Step>
+</Steps>
+
+### Cross-Filtering
+
+Click on any chart element to automatically filter related visualizations.
+
+```typescript
+const handleChartClick = (event: ChartEvent) => {
+  const element = event.chart.getElementsAtEventForMode(
+    event.native,
+    'nearest',
+    { intersect: true },
+    false
+  )[0];
+  
+  if (element) {
+    const datasetIndex = element.datasetIndex;
+    const index = element.index;
+    const label = event.chart.data.labels[index];
+    
+    // Apply cross-filter to other charts
+    dashboard.applyGlobalFilter({
+      dimension: 'industry',
+      value: label
+    });
+  }
+};
+```
+
+<Info>
+  Cross-filtering enables exploratory data analysis by allowing you to interact with visualizations and see immediate effects across your dashboard.
+</Info>
+
+## Custom Visualizations
+
+Create custom visualization dashboards tailored to specific business needs.
+
+### Dashboard Builder
+
+<Tabs>
+  <Tab title="Drag & Drop">
+    Intuitive drag-and-drop interface for arranging charts.
+    
+    ```typescript
+    const dashboardLayout = [
+      { i: 'revenue', x: 0, y: 0, w: 6, h: 4 },
+      { i: 'clients', x: 6, y: 0, w: 6, h: 4 },
+      { i: 'engagement', x: 0, y: 4, w: 4, h: 3 },
+      { i: 'distribution', x: 4, y: 4, w: 4, h: 3 },
+      { i: 'trends', x: 8, y: 4, w: 4, h: 3 }
+    ];
+    ```
+  </Tab>
+  
+  <Tab title="Chart Configuration">
+    Configure each chart's data source and display options.
+    
+    ```typescript
+    const chartConfig = {
+      id: 'revenue-by-region',
+      type: 'bar',
+      dataSource: {
+        metric: 'revenue',
+        groupBy: 'region',
+        aggregation: 'sum',
+        filters: { status: 'Active' }
+      },
+      display: {
+        title: 'Revenue by Region',
+        colors: 'default',
+        legend: true,
+        grid: true
+      }
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Save & Share">
+    Save custom dashboards and share with team members.
+    
+    ```typescript
+    const saveDashboard = async (config: DashboardConfig) => {
+      const dashboard = {
+        name: 'Executive Overview',
+        description: 'High-level metrics for leadership',
+        layout: config.layout,
+        charts: config.charts,
+        filters: config.defaultFilters,
+        sharing: {
+          visibility: 'team',
+          permissions: ['view', 'filter']
+        }
+      };
+      
+      await api.dashboards.save(dashboard);
+    };
+    ```
+  </Tab>
+</Tabs>
+
+### Visualization Templates
+
+<CardGroup cols={2}>
+  <Card title="Executive Dashboard" icon="briefcase">
+    High-level KPIs and strategic metrics for leadership
+  </Card>
+  <Card title="Sales Analytics" icon="chart-line-up">
+    Pipeline, conversion rates, and revenue analysis
+  </Card>
+  <Card title="Client Health" icon="heart-pulse">
+    Engagement scores, satisfaction, and retention metrics
+  </Card>
+  <Card title="Team Performance" icon="users-gear">
+    Individual and team productivity analytics
+  </Card>
+  <Card title="Financial Overview" icon="sack-dollar">
+    Revenue, expenses, and profitability analysis
+  </Card>
+  <Card title="Operational Metrics" icon="gears">
+    Efficiency, response times, and operational KPIs
+  </Card>
+</CardGroup>
+
+## Advanced Analytics
+
+Leverage advanced analytical capabilities for deeper insights.
+
+### Cohort Analysis
+
+Analyze client behavior grouped by acquisition period.
+
+```typescript
+interface CohortAnalysis {
+  cohorts: [
+    {
+      period: 'Jan 2024',
+      size: 25,                    // Clients acquired
+      retention: {
+        month1: 96,                // 96% retained after 1 month
+        month2: 92,
+        month3: 88,
+        month6: 80
+      },
+      revenue: {
+        month1: 125000,
+        month2: 248000,
+        month3: 367000
+      }
+    }
+  ];
+}
+```
+
+### Trend Analysis
+
+Identify patterns and forecast future performance.
+
+```typescript
+const trendAnalysis = {
+  metric: 'revenue',
+  historical: {
+    data: [95000, 102000, 98000, 115000, 125000, 132000],
+    period: '6 months'
+  },
+  trend: {
+    direction: 'increasing',
+    slope: 7500,                  // Average monthly increase
+    confidence: 0.87
+  },
+  forecast: {
+    nextMonth: 139500,
+    nextQuarter: 425000,
+    confidence: 0.75
+  },
+  seasonality: {
+    detected: true,
+    pattern: 'quarterly'
+  }
+};
+```
+
+<Note>
+  Trend analysis uses historical data to identify patterns and generate forecasts. Longer historical periods generally produce more accurate predictions.
+</Note>
+
+### Comparative Analysis
+
+Compare performance across segments, time periods, or benchmarks.
+
+<Tabs>
+  <Tab title="Period Comparison">
+    ```typescript
+    const periodComparison = {
+      current: {
+        period: 'Q1 2024',
+        revenue: 385000,
+        clients: 247,
+        avgDealSize: 1559
+      },
+      previous: {
+        period: 'Q4 2023',
+        revenue: 342000,
+        clients: 235,
+        avgDealSize: 1455
+      },
+      change: {
+        revenue: { value: 43000, percent: 12.6 },
+        clients: { value: 12, percent: 5.1 },
+        avgDealSize: { value: 104, percent: 7.1 }
+      }
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Segment Comparison">
+    ```typescript
+    const segmentComparison = [
+      {
+        segment: 'Enterprise',
+        clients: 45,
+        revenue: 2250000,
+        avgDealSize: 50000,
+        churnRate: 1.2
+      },
+      {
+        segment: 'Mid-Market',
+        clients: 128,
+        revenue: 1920000,
+        avgDealSize: 15000,
+        churnRate: 3.8
+      },
+      {
+        segment: 'SMB',
+        clients: 324,
+        revenue: 972000,
+        avgDealSize: 3000,
+        churnRate: 8.5
+      }
+    ];
+    ```
+  </Tab>
+  
+  <Tab title="Benchmark Comparison">
+    ```typescript
+    const benchmarkComparison = {
+      your: {
+        churnRate: 2.3,
+        ltv: 45000,
+        nps: 72
+      },
+      industry: {
+        churnRate: 5.1,
+        ltv: 38000,
+        nps: 65
+      },
+      performance: {
+        churnRate: 'above average',
+        ltv: 'above average',
+        nps: 'above average'
+      }
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Heatmaps
+
+Visualize patterns and intensity across two dimensions.
+
+```typescript
+const activityHeatmap = {
+  type: 'heatmap',
+  data: {
+    xLabels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    yLabels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+    datasets: [
+      {
+        label: 'Client Activity',
+        data: [
+          [5, 8, 15, 22, 18, 3, 2],      // 00:00-04:00
+          [2, 3, 7, 12, 9, 1, 1],        // 04:00-08:00
+          [45, 52, 58, 61, 55, 12, 8],   // 08:00-12:00
+          [38, 42, 47, 49, 44, 15, 10],  // 12:00-16:00
+          [28, 31, 35, 37, 33, 18, 12],  // 16:00-20:00
+          [12, 15, 18, 20, 17, 8, 5]     // 20:00-00:00
+        ],
+        backgroundColor: (context) => {
+          const value = context.dataset.data[context.dataIndex];
+          return getHeatColor(value, 0, 70);
+        }
+      }
+    ]
+  }
+};
+```
+
+<CardGroup cols={2}>
+  <Card title="Activity Patterns" icon="calendar-days">
+    Identify peak activity times by day and hour
+  </Card>
+  <Card title="Geographic Distribution" icon="map">
+    Visualize client density across regions
+  </Card>
+  <Card title="Feature Usage" icon="grid-2">
+    See which features are used most frequently
+  </Card>
+  <Card title="Engagement Intensity" icon="fire">
+    Track interaction intensity over time
+  </Card>
+</CardGroup>
+
+## Sharing Visualizations
+
+Collaborate with team members by sharing insights and visualizations.
+
+### Export Options
+
+<Steps>
+  <Step title="Static Image Export">
+    Download charts as PNG or SVG files.
+    
+    ```typescript
+    const exportChart = async (chartId: string, format: 'png' | 'svg') => {
+      const chart = document.getElementById(chartId);
+      const canvas = await html2canvas(chart);
+      
+      if (format === 'png') {
+        return canvas.toDataURL('image/png');
+      } else {
+        return await convertToSVG(canvas);
+      }
+    };
+    ```
+  </Step>
+  
+  <Step title="Interactive Share">
+    Generate shareable links with live, interactive charts.
+    
+    ```typescript
+    const shareChart = async (chartConfig: ChartConfig) => {
+      const shareToken = await api.sharing.createToken({
+        resource: chartConfig,
+        permissions: ['view', 'filter'],
+        expiration: '30d'
+      });
+      
+      return `https://app.solarecliente.com/share/${shareToken}`;
+    };
+    ```
+  </Step>
+  
+  <Step title="Embed in External Tools">
+    Embed charts in presentations, reports, or other applications.
+    
+    ```html
+    <iframe
+      src="https://app.solarecliente.com/embed/chart/abc123"
+      width="800"
+      height="600"
+      frameborder="0"
+    ></iframe>
+    ```
+  </Step>
+  
+  <Step title="Schedule Email Reports">
+    Automatically send visualization reports to stakeholders.
+    
+    ```typescript
+    const scheduleReport = {
+      name: 'Weekly Revenue Report',
+      visualizations: ['revenue-trend', 'client-distribution'],
+      recipients: ['exec-team@company.com'],
+      schedule: {
+        frequency: 'weekly',
+        day: 'Monday',
+        time: '09:00'
+      },
+      format: 'pdf'
+    };
+    ```
+  </Step>
+</Steps>
+
+### Collaboration Features
+
+<CardGroup cols={3}>
+  <Card title="Comments" icon="comment">
+    Add contextual comments to specific data points
+  </Card>
+  <Card title="Annotations" icon="pen-to-square">
+    Highlight important events or anomalies
+  </Card>
+  <Card title="Alerts" icon="bell">
+    Set up notifications for threshold breaches
+  </Card>
+  <Card title="Version History" icon="clock-rotate-left">
+    Track changes and revert to previous versions
+  </Card>
+  <Card title="Team Dashboards" icon="users">
+    Create shared dashboards for team collaboration
+  </Card>
+  <Card title="Presentation Mode" icon="presentation-screen">
+    Full-screen mode optimized for meetings
+  </Card>
+</CardGroup>
+
+## Performance Optimization
+
+Solarecliente optimizes visualization performance for large datasets.
+
+### Data Aggregation
+
+```typescript
+const optimizedQuery = {
+  metric: 'revenue',
+  groupBy: 'month',
+  aggregation: 'sum',
+  cache: {
+    enabled: true,
+    ttl: 3600                    // Cache for 1 hour
+  },
+  optimization: {
+    sampling: false,             // Use all data points
+    preAggregate: true,          // Server-side aggregation
+    lazyLoad: true               // Load data as needed
+  }
+};
+```
+
+<Info>
+  **Performance Tip:** For very large datasets (>100k records), enable data sampling or increase aggregation granularity to maintain responsive visualizations.
+</Info>
+
+### Progressive Loading
+
+```typescript
+const progressiveChart = {
+  initialLoad: {
+    limit: 1000,                 // Load first 1000 points
+    aggregate: 'day'             // Daily aggregation
+  },
+  onZoom: {
+    loadMore: true,              // Load more detail on zoom
+    aggregate: 'hour'            // Hourly aggregation when zoomed
+  },
+  onScroll: {
+    virtualScroll: true,         // Load data as user scrolls
+    bufferSize: 500
+  }
+};
+```
+
+<Note>
+  Progressive loading ensures fast initial render times while still providing access to detailed data when needed.
+</Note>

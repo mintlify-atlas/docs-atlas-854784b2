@@ -1,0 +1,410 @@
+---
+title: 'Installation'
+description: 'Complete installation guide for Solarecliente'
+---
+
+## System Requirements
+
+Before installing Solarecliente, ensure your system meets the following requirements:
+
+<CardGroup cols={2}>
+  <Card title="Node.js" icon="node-js">
+    Version 18.0 or higher required
+  </Card>
+  <Card title="Database" icon="database">
+    PostgreSQL 14+ or MySQL 8+
+  </Card>
+  <Card title="Memory" icon="memory">
+    Minimum 4GB RAM recommended
+  </Card>
+  <Card title="Storage" icon="hard-drive">
+    At least 500MB free disk space
+  </Card>
+</CardGroup>
+
+## Installation Methods
+
+Choose the installation method that best fits your needs:
+
+<Tabs>
+  <Tab title="NPM">
+    ### Install via NPM
+
+    The recommended way to install Solarecliente is using npm:
+
+    ```bash
+    # Clone the repository
+    git clone https://github.com/your-org/solarecliente.git
+    cd solarecliente
+
+    # Install dependencies
+    npm install
+
+    # Build the application
+    npm run build
+    ```
+
+    <Note>
+      This method gives you full access to the source code and allows for customization.
+    </Note>
+  </Tab>
+
+  <Tab title="Yarn">
+    ### Install via Yarn
+
+    If you prefer Yarn as your package manager:
+
+    ```bash
+    # Clone the repository
+    git clone https://github.com/your-org/solarecliente.git
+    cd solarecliente
+
+    # Install dependencies
+    yarn install
+
+    # Build the application
+    yarn build
+    ```
+  </Tab>
+
+  <Tab title="Docker">
+    ### Install via Docker
+
+    Use Docker for a containerized deployment:
+
+    ```bash
+    # Pull the official image
+    docker pull solarecliente/app:latest
+
+    # Run the container
+    docker run -p 3000:3000 \
+      -e DATABASE_URL="postgresql://user:pass@db:5432/solarecliente" \
+      -e NEXT_PUBLIC_API_URL="https://api.yourdomain.com" \
+      solarecliente/app:latest
+    ```
+
+    Or use Docker Compose:
+
+    ```yaml
+    version: '3.8'
+    services:
+      app:
+        image: solarecliente/app:latest
+        ports:
+          - "3000:3000"
+        environment:
+          - DATABASE_URL=postgresql://postgres:password@db:5432/solarecliente
+          - NEXT_PUBLIC_API_URL=http://localhost:3000/api
+        depends_on:
+          - db
+      
+      db:
+        image: postgres:14
+        environment:
+          - POSTGRES_DB=solarecliente
+          - POSTGRES_PASSWORD=password
+        volumes:
+          - postgres_data:/var/lib/postgresql/data
+
+    volumes:
+      postgres_data:
+    ```
+
+    Run with:
+
+    ```bash
+    docker-compose up -d
+    ```
+  </Tab>
+</Tabs>
+
+## Configuration
+
+### Environment Variables
+
+Solarecliente uses environment variables for configuration. Create a `.env.local` file in the root directory:
+
+<CodeGroup>
+```env Development
+# Application
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_API_URL=http://localhost:3000/api
+NODE_ENV=development
+
+# Database
+DATABASE_URL=postgresql://postgres:password@localhost:5432/solarecliente
+
+# Authentication
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-secret-key-here
+
+# Email (Optional)
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your-email@gmail.com
+SMTP_PASSWORD=your-password
+
+# File Storage (Optional)
+S3_BUCKET=solarecliente-files
+S3_REGION=us-east-1
+S3_ACCESS_KEY=your-access-key
+S3_SECRET_KEY=your-secret-key
+```
+
+```env Production
+# Application
+NEXT_PUBLIC_APP_URL=https://yourdomain.com
+NEXT_PUBLIC_API_URL=https://yourdomain.com/api
+NODE_ENV=production
+
+# Database
+DATABASE_URL=postgresql://user:password@prod-db.example.com:5432/solarecliente
+
+# Authentication
+NEXTAUTH_URL=https://yourdomain.com
+NEXTAUTH_SECRET=your-production-secret-key
+
+# Email
+SMTP_HOST=smtp.sendgrid.net
+SMTP_PORT=587
+SMTP_USER=apikey
+SMTP_PASSWORD=your-sendgrid-api-key
+
+# File Storage
+S3_BUCKET=solarecliente-prod-files
+S3_REGION=us-east-1
+S3_ACCESS_KEY=your-prod-access-key
+S3_SECRET_KEY=your-prod-secret-key
+```
+</CodeGroup>
+
+<Warning>
+  Never commit your `.env.local` file to version control. Add it to `.gitignore` to keep your secrets safe.
+</Warning>
+
+### Database Setup
+
+<Steps>
+  <Step title="Create Database">
+    Create a new PostgreSQL or MySQL database:
+
+    ```sql
+    CREATE DATABASE solarecliente;
+    ```
+  </Step>
+
+  <Step title="Run Migrations">
+    Apply the database schema:
+
+    ```bash
+    npm run db:migrate
+    ```
+
+    This will create all necessary tables and indexes.
+  </Step>
+
+  <Step title="Seed Initial Data (Optional)">
+    Populate the database with sample data for testing:
+
+    ```bash
+    npm run db:seed
+    ```
+
+    <Note>
+      This step is optional and only recommended for development environments.
+    </Note>
+  </Step>
+</Steps>
+
+## Verifying Installation
+
+After installation, verify everything is working correctly:
+
+### 1. Check Application Status
+
+```bash
+npm run dev
+```
+
+Visit `http://localhost:3000` and you should see the Solarecliente login page.
+
+### 2. Run Health Check
+
+```bash
+curl http://localhost:3000/api/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "healthy",
+  "database": "connected",
+  "version": "1.0.0"
+}
+```
+
+### 3. Run Tests
+
+```bash
+npm run test
+```
+
+All tests should pass:
+
+```bash
+✓ Client API endpoints (4 tests)
+✓ Authentication flow (3 tests)
+✓ Database connections (2 tests)
+
+Test Suites: 9 passed, 9 total
+Tests: 47 passed, 47 total
+```
+
+## Post-Installation Steps
+
+<Steps>
+  <Step title="Create Admin Account">
+    Create your first admin user:
+
+    ```bash
+    npm run create-admin
+    ```
+
+    Follow the prompts to set up your admin credentials.
+  </Step>
+
+  <Step title="Configure Authentication">
+    Set up your preferred authentication provider (OAuth, SAML, etc.) in the admin panel:
+
+    Navigate to **Settings > Authentication** and configure your provider.
+  </Step>
+
+  <Step title="Customize Branding">
+    Update the application branding to match your organization:
+
+    ```typescript
+    // config/branding.ts
+    export const branding = {
+      companyName: 'Your Company',
+      logo: '/images/your-logo.png',
+      primaryColor: '#1a73e8',
+      theme: 'light', // or 'dark'
+    };
+    ```
+  </Step>
+
+  <Step title="Set Up Backups">
+    Configure automated database backups:
+
+    ```bash
+    npm run setup-backups
+    ```
+
+    <Note>
+      For production environments, we recommend daily automated backups with at least 30-day retention.
+    </Note>
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+### Common Issues
+
+<AccordionGroup>
+  <Accordion title="Port 3000 already in use">
+    If port 3000 is already in use, you can change the port:
+
+    ```bash
+    PORT=3001 npm run dev
+    ```
+
+    Or update your `.env.local` file:
+
+    ```env
+    PORT=3001
+    ```
+  </Accordion>
+
+  <Accordion title="Database connection failed">
+    Verify your database credentials and ensure the database server is running:
+
+    ```bash
+    # For PostgreSQL
+    pg_isready -h localhost -p 5432
+
+    # Check your DATABASE_URL
+    echo $DATABASE_URL
+    ```
+
+    Common fixes:
+    - Ensure the database exists
+    - Check username and password
+    - Verify the database server is running
+    - Check firewall rules
+  </Accordion>
+
+  <Accordion title="Module not found errors">
+    Clear node_modules and reinstall:
+
+    ```bash
+    rm -rf node_modules
+    rm package-lock.json
+    npm install
+    ```
+  </Accordion>
+
+  <Accordion title="Build errors">
+    If you encounter TypeScript or build errors:
+
+    ```bash
+    # Clear Next.js cache
+    rm -rf .next
+
+    # Rebuild
+    npm run build
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Updating Solarecliente
+
+To update to the latest version:
+
+```bash
+# Pull latest changes
+git pull origin main
+
+# Install new dependencies
+npm install
+
+# Run any new migrations
+npm run db:migrate
+
+# Rebuild the application
+npm run build
+
+# Restart the server
+npm run start
+```
+
+<Warning>
+  Always backup your database before updating to a new version.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Follow our quickstart guide to create your first client
+  </Card>
+  <Card title="Configuration" icon="gear" href="/guides/configuration">
+    Learn about advanced configuration options
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/overview">
+    Explore the API documentation
+  </Card>
+  <Card title="Deployment" icon="cloud" href="/guides/deployment">
+    Deploy Solarecliente to production
+  </Card>
+</CardGroup>

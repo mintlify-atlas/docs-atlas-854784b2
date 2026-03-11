@@ -1,0 +1,672 @@
+---
+title: 'Customization'
+description: 'Customize Solarecliente to match your brand and requirements'
+icon: 'paintbrush'
+---
+
+## Overview
+
+Solarecliente is designed to be highly customizable. This guide covers theming, branding, UI components, and extending functionality to match your specific needs.
+
+## Theming
+
+### Custom Theme Creation
+
+Create a custom theme by extending the base theme configuration:
+
+<Steps>
+  <Step title="Create Theme File">
+    Create a new theme configuration file:
+
+    ```typescript
+    // src/themes/custom.theme.ts
+    import { Theme } from '@/types/theme';
+
+    export const customTheme: Theme = {
+      name: 'custom',
+      colors: {
+        primary: {
+          50: '#EEF2FF',
+          100: '#E0E7FF',
+          500: '#6366F1',
+          600: '#4F46E5',
+          900: '#312E81'
+        },
+        secondary: {
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          500: '#6B7280',
+          600: '#4B5563',
+          900: '#111827'
+        },
+        success: '#10B981',
+        warning: '#F59E0B',
+        error: '#EF4444',
+        info: '#3B82F6'
+      },
+      typography: {
+        fontFamily: {
+          sans: ['Inter', 'sans-serif'],
+          mono: ['Fira Code', 'monospace']
+        },
+        fontSize: {
+          xs: '0.75rem',
+          sm: '0.875rem',
+          base: '1rem',
+          lg: '1.125rem',
+          xl: '1.25rem',
+          '2xl': '1.5rem',
+          '3xl': '1.875rem'
+        },
+        fontWeight: {
+          normal: 400,
+          medium: 500,
+          semibold: 600,
+          bold: 700
+        }
+      },
+      spacing: {
+        xs: '0.25rem',
+        sm: '0.5rem',
+        md: '1rem',
+        lg: '1.5rem',
+        xl: '2rem'
+      },
+      borderRadius: {
+        sm: '0.25rem',
+        md: '0.375rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        full: '9999px'
+      },
+      shadows: {
+        sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+        md: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+        lg: '0 10px 15px -3px rgb(0 0 0 / 0.1)',
+        xl: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
+      }
+    };
+    ```
+  </Step>
+
+  <Step title="Register Theme">
+    Register your theme in the theme provider:
+
+    ```typescript
+    // src/providers/ThemeProvider.tsx
+    import { customTheme } from '@/themes/custom.theme';
+    
+    export const themes = {
+      light: lightTheme,
+      dark: darkTheme,
+      custom: customTheme
+    };
+    ```
+  </Step>
+
+  <Step title="Apply Theme">
+    Set your custom theme as the default:
+
+    ```bash
+    # .env
+    VITE_DEFAULT_THEME=custom
+    ```
+  </Step>
+</Steps>
+
+### CSS Variables
+
+Themes are automatically converted to CSS variables for easy access:
+
+```css
+/* Generated CSS variables */
+:root {
+  --color-primary-50: #EEF2FF;
+  --color-primary-500: #6366F1;
+  --color-primary-900: #312E81;
+  --font-family-sans: 'Inter', sans-serif;
+  --spacing-md: 1rem;
+  --border-radius-lg: 0.5rem;
+}
+
+/* Use in your styles */
+.custom-button {
+  background-color: var(--color-primary-500);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
+  font-family: var(--font-family-sans);
+}
+```
+
+<Tip>
+  Use CSS variables for theme values to ensure consistency and enable dynamic theme switching.
+</Tip>
+
+## Branding
+
+### Logo and Icon Customization
+
+<CardGroup cols={2}>
+  <Card title="Logo" icon="image">
+    Replace the default logo with your brand logo
+  </Card>
+  <Card title="Favicon" icon="browser">
+    Customize the browser favicon and app icons
+  </Card>
+  <Card title="Colors" icon="palette">
+    Apply your brand colors throughout the app
+  </Card>
+  <Card title="Typography" icon="font">
+    Use your brand's typography and fonts
+  </Card>
+</CardGroup>
+
+<Steps>
+  <Step title="Add Logo Files">
+    Place your logo files in the public directory:
+
+    ```bash
+    public/
+    ├── logo-light.svg
+    ├── logo-dark.svg
+    └── logo-compact.svg
+    ```
+  </Step>
+
+  <Step title="Configure Logo Paths">
+    Update the logo configuration:
+
+    ```typescript
+    // src/config/branding.config.ts
+    export const brandingConfig = {
+      logo: {
+        light: '/logo-light.svg',
+        dark: '/logo-dark.svg',
+        compact: '/logo-compact.svg'
+      },
+      name: 'Your Company Name',
+      tagline: 'Your Company Tagline'
+    };
+    ```
+  </Step>
+
+  <Step title="Update Favicon">
+    Replace the favicon in `public/favicon.ico` and update the HTML head:
+
+    ```html
+    <!-- index.html -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    ```
+  </Step>
+</Steps>
+
+### Custom Fonts
+
+Add custom fonts to your application:
+
+```typescript
+// src/styles/fonts.ts
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/fira-code/400.css';
+```
+
+Or use web fonts:
+
+```html
+<!-- index.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+```
+
+## Component Customization
+
+### Override Component Styles
+
+Customize individual components using CSS modules or styled-components:
+
+```typescript
+// src/components/CustomButton.tsx
+import { Button } from '@/components/ui/Button';
+import styles from './CustomButton.module.css';
+
+export function CustomButton({ children, ...props }) {
+  return (
+    <Button className={styles.customButton} {...props}>
+      {children}
+    </Button>
+  );
+}
+```
+
+```css
+/* CustomButton.module.css */
+.customButton {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+}
+
+.customButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+```
+
+### Create Custom Components
+
+Extend functionality with custom components:
+
+```typescript
+// src/components/custom/ClientCard.tsx
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Client } from '@/types';
+
+interface ClientCardProps {
+  client: Client;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}
+
+export function ClientCard({ client, onEdit, onDelete }: ClientCardProps) {
+  return (
+    <Card className="client-card">
+      <div className="client-header">
+        <h3>{client.name}</h3>
+        <Badge variant={client.active ? 'success' : 'default'}>
+          {client.active ? 'Active' : 'Inactive'}
+        </Badge>
+      </div>
+      <div className="client-info">
+        <p>{client.email}</p>
+        <p>{client.phone}</p>
+      </div>
+      <div className="client-actions">
+        <button onClick={onEdit}>Edit</button>
+        <button onClick={onDelete}>Delete</button>
+      </div>
+    </Card>
+  );
+}
+```
+
+## Layout Customization
+
+### Custom Dashboard Layout
+
+Create a custom dashboard layout:
+
+```typescript
+// src/layouts/CustomDashboard.tsx
+import { Header } from '@/components/layout/Header';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { Footer } from '@/components/layout/Footer';
+
+export function CustomDashboard({ children }) {
+  return (
+    <div className="dashboard-layout">
+      <Header />
+      <div className="dashboard-content">
+        <Sidebar />
+        <main className="main-content">
+          {children}
+        </main>
+      </div>
+      <Footer />
+    </div>
+  );
+}
+```
+
+### Navigation Customization
+
+Customize the navigation menu:
+
+```typescript
+// src/config/navigation.config.ts
+export const navigationConfig = [
+  {
+    title: 'Dashboard',
+    href: '/dashboard',
+    icon: 'home',
+    badge: null
+  },
+  {
+    title: 'Clients',
+    href: '/clients',
+    icon: 'users',
+    badge: 'new'
+  },
+  {
+    title: 'Projects',
+    href: '/projects',
+    icon: 'briefcase',
+    children: [
+      { title: 'Active', href: '/projects/active' },
+      { title: 'Completed', href: '/projects/completed' },
+      { title: 'Archived', href: '/projects/archived' }
+    ]
+  },
+  {
+    title: 'Settings',
+    href: '/settings',
+    icon: 'settings'
+  }
+];
+```
+
+<Warning>
+  Ensure navigation items have proper access control if you're implementing role-based permissions.
+</Warning>
+
+## Form Customization
+
+### Custom Form Fields
+
+Create reusable custom form components:
+
+```typescript
+// src/components/forms/CustomTextField.tsx
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { ErrorMessage } from '@/components/ui/ErrorMessage';
+
+interface CustomTextFieldProps {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (value: string) => void;
+  error?: string;
+  required?: boolean;
+  placeholder?: string;
+}
+
+export function CustomTextField({
+  label,
+  name,
+  value,
+  onChange,
+  error,
+  required,
+  placeholder
+}: CustomTextFieldProps) {
+  return (
+    <div className="form-field">
+      <Label htmlFor={name}>
+        {label}
+        {required && <span className="required">*</span>}
+      </Label>
+      <Input
+        id={name}
+        name={name}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        error={!!error}
+      />
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+    </div>
+  );
+}
+```
+
+### Form Validation Rules
+
+Customize validation rules:
+
+```typescript
+// src/utils/validation.ts
+import { z } from 'zod';
+
+export const clientSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
+  company: z.string().optional(),
+  notes: z.string().max(500, 'Notes must be less than 500 characters').optional()
+});
+
+export type ClientFormData = z.infer<typeof clientSchema>;
+```
+
+## Data Display Customization
+
+### Custom Table Columns
+
+Customize table displays:
+
+```typescript
+// src/config/table.config.ts
+import { ColumnDef } from '@tanstack/react-table';
+import { Client } from '@/types';
+
+export const clientColumns: ColumnDef<Client>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Client Name',
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue('name')}</div>
+    )
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+    cell: ({ row }) => (
+      <a href={`mailto:${row.getValue('email')}`}>
+        {row.getValue('email')}
+      </a>
+    )
+  },
+  {
+    accessorKey: 'status',
+    header: 'Status',
+    cell: ({ row }) => {
+      const status = row.getValue('status');
+      return (
+        <Badge variant={status === 'active' ? 'success' : 'default'}>
+          {status}
+        </Badge>
+      );
+    }
+  },
+  {
+    id: 'actions',
+    cell: ({ row }) => (
+      <ActionMenu client={row.original} />
+    )
+  }
+];
+```
+
+### Custom Charts and Visualizations
+
+Add custom data visualizations:
+
+```typescript
+// src/components/charts/ClientGrowthChart.tsx
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+
+interface ClientGrowthChartProps {
+  data: Array<{ month: string; clients: number }>;
+}
+
+export function ClientGrowthChart({ data }: ClientGrowthChartProps) {
+  return (
+    <LineChart width={600} height={300} data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="month" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Line 
+        type="monotone" 
+        dataKey="clients" 
+        stroke="var(--color-primary-500)" 
+        strokeWidth={2}
+      />
+    </LineChart>
+  );
+}
+```
+
+## Internationalization (i18n)
+
+### Add Custom Translations
+
+<Steps>
+  <Step title="Create Translation Files">
+    ```json
+    // src/locales/es-MX/common.json
+    {
+      "common": {
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "delete": "Eliminar",
+        "edit": "Editar",
+        "create": "Crear",
+        "search": "Buscar"
+      },
+      "clients": {
+        "title": "Clientes",
+        "addNew": "Agregar Cliente",
+        "details": "Detalles del Cliente",
+        "noClients": "No hay clientes registrados"
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Use Translations">
+    ```typescript
+    import { useTranslation } from 'react-i18next';
+
+    export function ClientList() {
+      const { t } = useTranslation();
+      
+      return (
+        <div>
+          <h1>{t('clients.title')}</h1>
+          <button>{t('clients.addNew')}</button>
+        </div>
+      );
+    }
+    ```
+  </Step>
+</Steps>
+
+<Tip>
+  Use namespaces to organize translations by feature or module for better maintainability.
+</Tip>
+
+## Extending Functionality
+
+### Custom Hooks
+
+Create reusable custom hooks:
+
+```typescript
+// src/hooks/useClientSearch.ts
+import { useState, useEffect } from 'react';
+import { Client } from '@/types';
+import { searchClients } from '@/api/clients';
+
+export function useClientSearch(query: string) {
+  const [results, setResults] = useState<Client[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    if (!query) {
+      setResults([]);
+      return;
+    }
+
+    const search = async () => {
+      setLoading(true);
+      try {
+        const data = await searchClients(query);
+        setResults(data);
+        setError(null);
+      } catch (err) {
+        setError(err as Error);
+        setResults([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounce = setTimeout(search, 300);
+    return () => clearTimeout(debounce);
+  }, [query]);
+
+  return { results, loading, error };
+}
+```
+
+### Plugin System
+
+Implement a plugin architecture for extensibility:
+
+```typescript
+// src/plugins/types.ts
+export interface Plugin {
+  name: string;
+  version: string;
+  initialize: (app: Application) => void;
+  destroy?: () => void;
+}
+
+// src/plugins/analytics.plugin.ts
+export const analyticsPlugin: Plugin = {
+  name: 'analytics',
+  version: '1.0.0',
+  initialize(app) {
+    app.on('route-change', (route) => {
+      // Track page view
+      window.analytics?.track('Page View', { route });
+    });
+    
+    app.on('client-created', (client) => {
+      // Track client creation
+      window.analytics?.track('Client Created', { clientId: client.id });
+    });
+  },
+  destroy() {
+    // Cleanup
+  }
+};
+```
+
+## Styling Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Use Design Tokens" icon="palette">
+    Define colors, spacing, and typography as reusable tokens
+  </Card>
+  <Card title="Component Composition" icon="layer-group">
+    Build complex UIs from simple, reusable components
+  </Card>
+  <Card title="Responsive Design" icon="mobile">
+    Ensure all customizations work across device sizes
+  </Card>
+  <Card title="Accessibility" icon="universal-access">
+    Maintain WCAG compliance in custom components
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Configuration" icon="gear" href="/guides/configuration">
+    Configure application settings and environment
+  </Card>
+  <Card title="Deployment" icon="rocket" href="/guides/deployment">
+    Deploy your customized application
+  </Card>
+</CardGroup>

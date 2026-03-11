@@ -1,0 +1,667 @@
+---
+title: 'API Endpoints'
+description: 'Complete reference for all Solarecliente API endpoints'
+icon: 'code'
+---
+
+## Clients
+
+Manage client information and records.
+
+### List Clients
+
+<CodeGroup>
+
+```http Request
+GET /v1/clients
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/clients \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.solarecliente.com/v1/clients', {
+  headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+});
+const clients = await response.json();
+```
+
+</CodeGroup>
+
+#### Query Parameters
+
+<ParamField query="page" type="integer" default="1">
+  Page number for pagination
+</ParamField>
+
+<ParamField query="limit" type="integer" default="20">
+  Number of items per page (max: 100)
+</ParamField>
+
+<ParamField query="search" type="string">
+  Search by client name, email, or phone
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by status: `active`, `inactive`, `pending`
+</ParamField>
+
+#### Response
+
+<ResponseField name="success" type="boolean">
+  Indicates if the request was successful
+</ResponseField>
+
+<ResponseField name="data" type="array">
+  Array of client objects
+  
+  <Expandable title="Client Object">
+    <ResponseField name="id" type="string">
+      Unique client identifier
+    </ResponseField>
+    
+    <ResponseField name="name" type="string">
+      Client full name
+    </ResponseField>
+    
+    <ResponseField name="email" type="string">
+      Client email address
+    </ResponseField>
+    
+    <ResponseField name="phone" type="string">
+      Client phone number
+    </ResponseField>
+    
+    <ResponseField name="address" type="object">
+      Client address information
+      
+      <Expandable title="Address Object">
+        <ResponseField name="street" type="string">
+          Street address
+        </ResponseField>
+        
+        <ResponseField name="city" type="string">
+          City name
+        </ResponseField>
+        
+        <ResponseField name="state" type="string">
+          State or province
+        </ResponseField>
+        
+        <ResponseField name="postalCode" type="string">
+          Postal or ZIP code
+        </ResponseField>
+        
+        <ResponseField name="country" type="string">
+          Country code (ISO 3166-1 alpha-2)
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    
+    <ResponseField name="status" type="string">
+      Client status: `active`, `inactive`, `pending`
+    </ResponseField>
+    
+    <ResponseField name="createdAt" type="string">
+      ISO 8601 timestamp of creation
+    </ResponseField>
+    
+    <ResponseField name="updatedAt" type="string">
+      ISO 8601 timestamp of last update
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+### Get Client
+
+<CodeGroup>
+
+```http Request
+GET /v1/clients/{clientId}
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/clients/clt_abc123 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.solarecliente.com/v1/clients/clt_abc123', {
+  headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+});
+const client = await response.json();
+```
+
+</CodeGroup>
+
+#### Path Parameters
+
+<ParamField path="clientId" type="string" required>
+  The unique identifier of the client
+</ParamField>
+
+### Create Client
+
+<CodeGroup>
+
+```http Request
+POST /v1/clients
+```
+
+```bash cURL
+curl -X POST https://api.solarecliente.com/v1/clients \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "João Silva",
+    "email": "joao@example.com",
+    "phone": "+55 11 98765-4321",
+    "address": {
+      "street": "Rua das Flores, 123",
+      "city": "São Paulo",
+      "state": "SP",
+      "postalCode": "01234-567",
+      "country": "BR"
+    }
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.solarecliente.com/v1/clients', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    name: 'João Silva',
+    email: 'joao@example.com',
+    phone: '+55 11 98765-4321',
+    address: {
+      street: 'Rua das Flores, 123',
+      city: 'São Paulo',
+      state: 'SP',
+      postalCode: '01234-567',
+      country: 'BR'
+    }
+  })
+});
+const client = await response.json();
+```
+
+</CodeGroup>
+
+#### Body Parameters
+
+<ParamField body="name" type="string" required>
+  Client full name
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  Client email address
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  Client phone number
+</ParamField>
+
+<ParamField body="address" type="object" required>
+  Client address information
+  
+  <Expandable title="Address Fields">
+    <ParamField body="street" type="string" required>
+      Street address
+    </ParamField>
+    
+    <ParamField body="city" type="string" required>
+      City name
+    </ParamField>
+    
+    <ParamField body="state" type="string" required>
+      State or province
+    </ParamField>
+    
+    <ParamField body="postalCode" type="string" required>
+      Postal or ZIP code
+    </ParamField>
+    
+    <ParamField body="country" type="string" required>
+      Country code (ISO 3166-1 alpha-2)
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="taxId" type="string">
+  Tax identification number (CPF/CNPJ)
+</ParamField>
+
+<ParamField body="notes" type="string">
+  Additional notes about the client
+</ParamField>
+
+### Update Client
+
+<CodeGroup>
+
+```http Request
+PUT /v1/clients/{clientId}
+```
+
+```bash cURL
+curl -X PUT https://api.solarecliente.com/v1/clients/clt_abc123 \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"phone": "+55 11 91234-5678"}'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.solarecliente.com/v1/clients/clt_abc123', {
+  method: 'PUT',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ phone: '+55 11 91234-5678' })
+});
+const client = await response.json();
+```
+
+</CodeGroup>
+
+### Delete Client
+
+<CodeGroup>
+
+```http Request
+DELETE /v1/clients/{clientId}
+```
+
+```bash cURL
+curl -X DELETE https://api.solarecliente.com/v1/clients/clt_abc123 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.solarecliente.com/v1/clients/clt_abc123', {
+  method: 'DELETE',
+  headers: { 'Authorization': 'Bearer YOUR_API_KEY' }
+});
+```
+
+</CodeGroup>
+
+---
+
+## Projects
+
+Manage solar installation projects.
+
+### List Projects
+
+<CodeGroup>
+
+```http Request
+GET /v1/projects
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/projects \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</CodeGroup>
+
+#### Query Parameters
+
+<ParamField query="clientId" type="string">
+  Filter projects by client ID
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by status: `planning`, `approved`, `in_progress`, `completed`, `cancelled`
+</ParamField>
+
+<ParamField query="page" type="integer" default="1">
+  Page number for pagination
+</ParamField>
+
+<ParamField query="limit" type="integer" default="20">
+  Number of items per page
+</ParamField>
+
+### Create Project
+
+<CodeGroup>
+
+```http Request
+POST /v1/projects
+```
+
+```bash cURL
+curl -X POST https://api.solarecliente.com/v1/projects \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "clientId": "clt_abc123",
+    "name": "Residential Solar Installation",
+    "systemSize": 5.5,
+    "estimatedCost": 35000.00,
+    "startDate": "2026-04-01"
+  }'
+```
+
+```javascript JavaScript
+const response = await fetch('https://api.solarecliente.com/v1/projects', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    clientId: 'clt_abc123',
+    name: 'Residential Solar Installation',
+    systemSize: 5.5,
+    estimatedCost: 35000.00,
+    startDate: '2026-04-01'
+  })
+});
+```
+
+</CodeGroup>
+
+#### Body Parameters
+
+<ParamField body="clientId" type="string" required>
+  ID of the client for this project
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  Project name or description
+</ParamField>
+
+<ParamField body="systemSize" type="number" required>
+  Solar system size in kW
+</ParamField>
+
+<ParamField body="estimatedCost" type="number" required>
+  Estimated project cost in currency units
+</ParamField>
+
+<ParamField body="startDate" type="string">
+  Planned start date (ISO 8601 format)
+</ParamField>
+
+<ParamField body="notes" type="string">
+  Additional project notes
+</ParamField>
+
+---
+
+## Installations
+
+Track solar panel installations and maintenance.
+
+### List Installations
+
+<CodeGroup>
+
+```http Request
+GET /v1/installations
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/installations \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</CodeGroup>
+
+### Get Installation Details
+
+<CodeGroup>
+
+```http Request
+GET /v1/installations/{installationId}
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/installations/inst_xyz789 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</CodeGroup>
+
+#### Response Fields
+
+<ResponseField name="id" type="string">
+  Installation unique identifier
+</ResponseField>
+
+<ResponseField name="projectId" type="string">
+  Associated project ID
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Installation status: `scheduled`, `in_progress`, `completed`, `maintenance`
+</ResponseField>
+
+<ResponseField name="panels" type="array">
+  Array of solar panel information
+  
+  <Expandable title="Panel Object">
+    <ResponseField name="serialNumber" type="string">
+      Panel serial number
+    </ResponseField>
+    
+    <ResponseField name="manufacturer" type="string">
+      Panel manufacturer
+    </ResponseField>
+    
+    <ResponseField name="wattage" type="number">
+      Panel wattage in watts
+    </ResponseField>
+    
+    <ResponseField name="installDate" type="string">
+      Installation date (ISO 8601)
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="inverter" type="object">
+  Inverter information
+  
+  <Expandable title="Inverter Object">
+    <ResponseField name="model" type="string">
+      Inverter model
+    </ResponseField>
+    
+    <ResponseField name="manufacturer" type="string">
+      Inverter manufacturer
+    </ResponseField>
+    
+    <ResponseField name="capacity" type="number">
+      Inverter capacity in kW
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+---
+
+## Invoices
+
+Manage billing and invoices.
+
+### List Invoices
+
+<CodeGroup>
+
+```http Request
+GET /v1/invoices
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/invoices \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</CodeGroup>
+
+#### Query Parameters
+
+<ParamField query="clientId" type="string">
+  Filter invoices by client ID
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by status: `draft`, `sent`, `paid`, `overdue`, `cancelled`
+</ParamField>
+
+<ParamField query="startDate" type="string">
+  Filter by invoices created after this date (ISO 8601)
+</ParamField>
+
+<ParamField query="endDate" type="string">
+  Filter by invoices created before this date (ISO 8601)
+</ParamField>
+
+### Create Invoice
+
+<CodeGroup>
+
+```http Request
+POST /v1/invoices
+```
+
+```bash cURL
+curl -X POST https://api.solarecliente.com/v1/invoices \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "clientId": "clt_abc123",
+    "projectId": "prj_xyz789",
+    "items": [
+      {
+        "description": "Solar Panel Installation",
+        "quantity": 1,
+        "unitPrice": 35000.00
+      }
+    ],
+    "dueDate": "2026-04-30"
+  }'
+```
+
+</CodeGroup>
+
+#### Body Parameters
+
+<ParamField body="clientId" type="string" required>
+  Client ID for this invoice
+</ParamField>
+
+<ParamField body="projectId" type="string">
+  Associated project ID
+</ParamField>
+
+<ParamField body="items" type="array" required>
+  Array of invoice line items
+  
+  <Expandable title="Item Object">
+    <ParamField body="description" type="string" required>
+      Item description
+    </ParamField>
+    
+    <ParamField body="quantity" type="number" required>
+      Item quantity
+    </ParamField>
+    
+    <ParamField body="unitPrice" type="number" required>
+      Price per unit
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="dueDate" type="string" required>
+  Invoice due date (ISO 8601 format)
+</ParamField>
+
+<ParamField body="notes" type="string">
+  Additional invoice notes
+</ParamField>
+
+---
+
+## Reports
+
+Generate and retrieve analytics reports.
+
+### Generate Energy Production Report
+
+<CodeGroup>
+
+```http Request
+POST /v1/reports/energy-production
+```
+
+```bash cURL
+curl -X POST https://api.solarecliente.com/v1/reports/energy-production \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "installationId": "inst_xyz789",
+    "startDate": "2026-01-01",
+    "endDate": "2026-03-31"
+  }'
+```
+
+</CodeGroup>
+
+#### Body Parameters
+
+<ParamField body="installationId" type="string" required>
+  Installation ID for the report
+</ParamField>
+
+<ParamField body="startDate" type="string" required>
+  Report start date (ISO 8601)
+</ParamField>
+
+<ParamField body="endDate" type="string" required>
+  Report end date (ISO 8601)
+</ParamField>
+
+<ParamField body="format" type="string" default="json">
+  Report format: `json`, `pdf`, `csv`
+</ParamField>
+
+### Get Client Summary Report
+
+<CodeGroup>
+
+```http Request
+GET /v1/reports/client-summary/{clientId}
+```
+
+```bash cURL
+curl -X GET https://api.solarecliente.com/v1/reports/client-summary/clt_abc123 \
+  -H "Authorization: Bearer YOUR_API_KEY"
+```
+
+</CodeGroup>
+
+<ResponseField name="totalProjects" type="number">
+  Total number of projects for the client
+</ResponseField>
+
+<ResponseField name="totalRevenue" type="number">
+  Total revenue from the client
+</ResponseField>
+
+<ResponseField name="activeInstallations" type="number">
+  Number of active installations
+</ResponseField>
+
+<ResponseField name="totalEnergyProduced" type="number">
+  Total energy produced in kWh
+</ResponseField>

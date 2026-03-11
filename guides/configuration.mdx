@@ -1,0 +1,370 @@
+---
+title: 'Configuration'
+description: 'Learn how to configure Solarecliente for your environment'
+icon: 'gear'
+---
+
+## Overview
+
+Solarecliente provides flexible configuration options to adapt the application to your specific needs. This guide covers environment variables, application settings, and advanced configuration options.
+
+## Environment Variables
+
+<Steps>
+  <Step title="Create Configuration File">
+    Create a `.env` file in the root of your project:
+
+    ```bash
+    cp .env.example .env
+    ```
+  </Step>
+
+  <Step title="Configure API Settings">
+    Set up your API connection:
+
+    ```bash
+    # API Configuration
+    VITE_API_URL=https://api.example.com
+    VITE_API_KEY=your_api_key_here
+    VITE_API_TIMEOUT=30000
+    ```
+  </Step>
+
+  <Step title="Set Application Environment">
+    Define the environment mode:
+
+    ```bash
+    # Environment
+    NODE_ENV=production
+    VITE_APP_ENV=production
+    ```
+  </Step>
+</Steps>
+
+## Core Configuration Options
+
+<CardGroup cols={2}>
+  <Card title="API Settings" icon="plug">
+    Configure endpoints, authentication, and request handling
+  </Card>
+  <Card title="UI Preferences" icon="palette">
+    Customize themes, languages, and display options
+  </Card>
+  <Card title="Security" icon="shield">
+    Set up authentication, CORS, and security policies
+  </Card>
+  <Card title="Performance" icon="gauge-high">
+    Optimize caching, lazy loading, and resource management
+  </Card>
+</CardGroup>
+
+### API Configuration
+
+Configure the API connection and behavior:
+
+```typescript
+// src/config/api.config.ts
+export const apiConfig = {
+  baseURL: import.meta.env.VITE_API_URL,
+  timeout: parseInt(import.meta.env.VITE_API_TIMEOUT) || 30000,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-API-Key': import.meta.env.VITE_API_KEY
+  },
+  retry: {
+    attempts: 3,
+    delay: 1000,
+    backoff: 2
+  }
+};
+```
+
+<Accordion title="Available API Options">
+  | Option | Type | Default | Description |
+  |--------|------|---------|-------------|
+  | `baseURL` | string | - | Base API endpoint URL |
+  | `timeout` | number | 30000 | Request timeout in milliseconds |
+  | `headers` | object | {} | Default request headers |
+  | `retry.attempts` | number | 3 | Number of retry attempts |
+  | `retry.delay` | number | 1000 | Initial retry delay in ms |
+  | `retry.backoff` | number | 2 | Backoff multiplier for retries |
+</Accordion>
+
+### Authentication Configuration
+
+Set up authentication providers and options:
+
+```bash
+# Authentication
+VITE_AUTH_PROVIDER=oauth2
+VITE_AUTH_CLIENT_ID=your_client_id
+VITE_AUTH_REDIRECT_URI=http://localhost:3000/callback
+VITE_AUTH_SCOPE=read:clients write:clients
+
+# Session
+VITE_SESSION_TIMEOUT=3600000
+VITE_REFRESH_TOKEN_ENABLED=true
+```
+
+<Warning>
+  Never commit `.env` files containing sensitive credentials to version control. Use `.env.example` as a template with placeholder values.
+</Warning>
+
+### Database Configuration
+
+Configure local storage and caching:
+
+```typescript
+// src/config/storage.config.ts
+export const storageConfig = {
+  driver: 'indexeddb',
+  database: 'solarecliente',
+  version: 1,
+  stores: {
+    clients: {
+      keyPath: 'id',
+      indexes: ['email', 'createdAt']
+    },
+    cache: {
+      keyPath: 'key',
+      expiration: 3600000 // 1 hour
+    }
+  }
+};
+```
+
+## UI Configuration
+
+### Theme Settings
+
+Customize the application theme:
+
+```typescript
+// src/config/theme.config.ts
+export const themeConfig = {
+  defaultTheme: 'light',
+  themes: {
+    light: {
+      primary: '#0066FF',
+      secondary: '#6B7280',
+      background: '#FFFFFF',
+      surface: '#F9FAFB',
+      error: '#EF4444',
+      warning: '#F59E0B',
+      success: '#10B981'
+    },
+    dark: {
+      primary: '#3B82F6',
+      secondary: '#9CA3AF',
+      background: '#111827',
+      surface: '#1F2937',
+      error: '#F87171',
+      warning: '#FBBF24',
+      success: '#34D399'
+    }
+  }
+};
+```
+
+### Localization
+
+Configure language and regional settings:
+
+```bash
+# Localization
+VITE_DEFAULT_LOCALE=es-MX
+VITE_FALLBACK_LOCALE=en
+VITE_SUPPORTED_LOCALES=en,es-MX,es-ES
+VITE_TIMEZONE=America/Mexico_City
+```
+
+<Tip>
+  Use browser locale detection to automatically set the user's preferred language on first visit.
+</Tip>
+
+## Feature Flags
+
+Enable or disable features using environment variables:
+
+```bash
+# Feature Flags
+VITE_FEATURE_ADVANCED_SEARCH=true
+VITE_FEATURE_EXPORT_PDF=true
+VITE_FEATURE_BULK_OPERATIONS=false
+VITE_FEATURE_ANALYTICS=true
+VITE_FEATURE_NOTIFICATIONS=true
+```
+
+Access feature flags in your code:
+
+```typescript
+// src/utils/features.ts
+export const features = {
+  advancedSearch: import.meta.env.VITE_FEATURE_ADVANCED_SEARCH === 'true',
+  exportPdf: import.meta.env.VITE_FEATURE_EXPORT_PDF === 'true',
+  bulkOperations: import.meta.env.VITE_FEATURE_BULK_OPERATIONS === 'true',
+  analytics: import.meta.env.VITE_FEATURE_ANALYTICS === 'true',
+  notifications: import.meta.env.VITE_FEATURE_NOTIFICATIONS === 'true'
+};
+```
+
+## Performance Optimization
+
+### Caching Configuration
+
+```typescript
+// src/config/cache.config.ts
+export const cacheConfig = {
+  enabled: true,
+  strategy: 'stale-while-revalidate',
+  ttl: {
+    static: 86400000, // 24 hours
+    api: 300000, // 5 minutes
+    user: 3600000 // 1 hour
+  },
+  maxSize: 50 * 1024 * 1024 // 50MB
+};
+```
+
+### Lazy Loading
+
+Configure code splitting and lazy loading:
+
+```bash
+# Build Performance
+VITE_CHUNK_SIZE_WARNING_LIMIT=1000
+VITE_LAZY_LOAD_ROUTES=true
+VITE_PRELOAD_CRITICAL_ASSETS=true
+```
+
+## Security Configuration
+
+<Steps>
+  <Step title="Configure CORS">
+    Set allowed origins for API requests:
+
+    ```bash
+    VITE_CORS_ALLOWED_ORIGINS=https://app.example.com,https://admin.example.com
+    ```
+  </Step>
+
+  <Step title="Set Content Security Policy">
+    Define CSP headers:
+
+    ```bash
+    VITE_CSP_POLICY="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+    ```
+  </Step>
+
+  <Step title="Enable Security Headers">
+    Configure additional security options:
+
+    ```bash
+    VITE_SECURITY_HEADERS=true
+    VITE_HSTS_ENABLED=true
+    VITE_XSS_PROTECTION=true
+    ```
+  </Step>
+</Steps>
+
+<Warning>
+  Always use HTTPS in production and enable strict security headers to protect against common vulnerabilities.
+</Warning>
+
+## Logging and Monitoring
+
+Configure application logging:
+
+```bash
+# Logging
+VITE_LOG_LEVEL=info
+VITE_LOG_TO_CONSOLE=true
+VITE_LOG_TO_SERVER=false
+VITE_SENTRY_DSN=your_sentry_dsn
+VITE_ANALYTICS_ID=your_analytics_id
+```
+
+```typescript
+// src/config/logger.config.ts
+export const loggerConfig = {
+  level: import.meta.env.VITE_LOG_LEVEL || 'info',
+  console: import.meta.env.VITE_LOG_TO_CONSOLE === 'true',
+  remote: import.meta.env.VITE_LOG_TO_SERVER === 'true',
+  levels: ['error', 'warn', 'info', 'debug'],
+  format: 'json'
+};
+```
+
+## Environment-Specific Configurations
+
+<Accordion title="Development">
+  ```bash
+  NODE_ENV=development
+  VITE_API_URL=http://localhost:8000
+  VITE_LOG_LEVEL=debug
+  VITE_HOT_RELOAD=true
+  VITE_SOURCE_MAPS=true
+  ```
+</Accordion>
+
+<Accordion title="Staging">
+  ```bash
+  NODE_ENV=production
+  VITE_APP_ENV=staging
+  VITE_API_URL=https://staging-api.example.com
+  VITE_LOG_LEVEL=info
+  VITE_SOURCE_MAPS=true
+  ```
+</Accordion>
+
+<Accordion title="Production">
+  ```bash
+  NODE_ENV=production
+  VITE_APP_ENV=production
+  VITE_API_URL=https://api.example.com
+  VITE_LOG_LEVEL=error
+  VITE_SOURCE_MAPS=false
+  VITE_MINIFY=true
+  ```
+</Accordion>
+
+## Configuration Validation
+
+Validate your configuration on application startup:
+
+```typescript
+// src/config/validate.ts
+import { z } from 'zod';
+
+const envSchema = z.object({
+  VITE_API_URL: z.string().url(),
+  VITE_API_KEY: z.string().min(1),
+  VITE_AUTH_CLIENT_ID: z.string().min(1),
+  VITE_SESSION_TIMEOUT: z.string().regex(/^\d+$/)
+});
+
+export function validateConfig() {
+  try {
+    envSchema.parse(import.meta.env);
+    console.log('Configuration validated successfully');
+  } catch (error) {
+    console.error('Configuration validation failed:', error);
+    throw error;
+  }
+}
+```
+
+<Tip>
+  Use a schema validation library like Zod or Yup to catch configuration errors early during development.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Customization" icon="paintbrush" href="/guides/customization">
+    Learn how to customize the UI and functionality
+  </Card>
+  <Card title="Deployment" icon="rocket" href="/guides/deployment">
+    Deploy your configured application to production
+  </Card>
+</CardGroup>

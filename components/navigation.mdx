@@ -1,0 +1,612 @@
+---
+title: 'Navigation Components'
+description: 'Navigation components for menus, breadcrumbs, tabs, and routing'
+icon: 'compass'
+---
+
+## Overview
+
+Solarecliente provides a comprehensive set of navigation components designed to help users move efficiently through the application. All navigation components support accessibility features and responsive design.
+
+## MainNav Component
+
+The primary navigation component for the application header.
+
+### Basic Usage
+
+```typescript
+import { MainNav } from '@/components/navigation';
+
+const navItems = [
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: 'home',
+  },
+  {
+    label: 'Clients',
+    href: '/clients',
+    icon: 'users',
+  },
+  {
+    label: 'Projects',
+    href: '/projects',
+    icon: 'briefcase',
+  },
+  {
+    label: 'Reports',
+    href: '/reports',
+    icon: 'chart-bar',
+  },
+];
+
+function AppLayout() {
+  return (
+    <MainNav items={navItems} />
+  );
+}
+```
+
+### MainNav Props
+
+<ParamField path="items" type="NavItem[]" required>
+  Array of navigation items to display
+</ParamField>
+
+<ParamField path="logo" type="ReactNode">
+  Custom logo component or image
+</ParamField>
+
+<ParamField path="activeItem" type="string">
+  Key of the currently active navigation item
+</ParamField>
+
+<ParamField path="onItemClick" type="function">
+  Callback function when a navigation item is clicked
+</ParamField>
+
+<ParamField path="variant" type="'horizontal' | 'vertical'" default="horizontal">
+  Navigation layout orientation
+</ParamField>
+
+## Nested Navigation
+
+Create hierarchical navigation with dropdown menus.
+
+<CodeGroup>
+```typescript Dropdown Menu
+const navItems = [
+  {
+    label: 'Dashboard',
+    href: '/dashboard',
+    icon: 'home',
+  },
+  {
+    label: 'Clients',
+    icon: 'users',
+    children: [
+      {
+        label: 'All Clients',
+        href: '/clients',
+      },
+      {
+        label: 'Active Clients',
+        href: '/clients?status=active',
+      },
+      {
+        label: 'Pending Clients',
+        href: '/clients?status=pending',
+      },
+    ],
+  },
+  {
+    label: 'Projects',
+    icon: 'briefcase',
+    children: [
+      {
+        label: 'All Projects',
+        href: '/projects',
+      },
+      {
+        label: 'In Progress',
+        href: '/projects?status=in-progress',
+      },
+      {
+        label: 'Completed',
+        href: '/projects?status=completed',
+      },
+    ],
+  },
+];
+```
+
+```typescript Mega Menu
+const navItems = [
+  {
+    label: 'Management',
+    icon: 'cog',
+    megaMenu: {
+      sections: [
+        {
+          title: 'Client Management',
+          items: [
+            { label: 'All Clients', href: '/clients' },
+            { label: 'Add Client', href: '/clients/new' },
+            { label: 'Import Clients', href: '/clients/import' },
+          ],
+        },
+        {
+          title: 'Project Management',
+          items: [
+            { label: 'All Projects', href: '/projects' },
+            { label: 'Create Project', href: '/projects/new' },
+            { label: 'Templates', href: '/projects/templates' },
+          ],
+        },
+      ],
+    },
+  },
+];
+```
+</CodeGroup>
+
+## Sidebar Component
+
+Vertical navigation sidebar for app layouts.
+
+```typescript
+import { Sidebar } from '@/components/navigation';
+
+const sidebarItems = [
+  {
+    label: 'Overview',
+    href: '/dashboard',
+    icon: 'home',
+  },
+  {
+    label: 'Client Management',
+    icon: 'users',
+    children: [
+      { label: 'All Clients', href: '/clients' },
+      { label: 'Add Client', href: '/clients/new' },
+      { label: 'Client Groups', href: '/clients/groups' },
+    ],
+  },
+  {
+    label: 'Analytics',
+    href: '/analytics',
+    icon: 'chart-line',
+    badge: { text: 'New', variant: 'success' },
+  },
+];
+
+function AppLayout({ children }) {
+  return (
+    <div className="flex">
+      <Sidebar
+        items={sidebarItems}
+        collapsible
+        defaultCollapsed={false}
+      />
+      <main className="flex-1">
+        {children}
+      </main>
+    </div>
+  );
+}
+```
+
+### Sidebar Props
+
+<ParamField path="items" type="NavItem[]" required>
+  Array of sidebar navigation items
+</ParamField>
+
+<ParamField path="collapsible" type="boolean" default={false}>
+  Enable sidebar collapse functionality
+</ParamField>
+
+<ParamField path="defaultCollapsed" type="boolean" default={false}>
+  Initial collapsed state
+</ParamField>
+
+<ParamField path="width" type="string" default="250px">
+  Sidebar width when expanded
+</ParamField>
+
+<ParamField path="collapsedWidth" type="string" default="60px">
+  Sidebar width when collapsed
+</ParamField>
+
+## Breadcrumbs Component
+
+Display the user's current location in the application hierarchy.
+
+<Tabs>
+  <Tab title="Basic">
+    ```typescript
+    import { Breadcrumbs } from '@/components/navigation';
+
+    const breadcrumbItems = [
+      { label: 'Home', href: '/' },
+      { label: 'Clients', href: '/clients' },
+      { label: 'John Doe' },
+    ];
+
+    <Breadcrumbs items={breadcrumbItems} />
+    ```
+  </Tab>
+  <Tab title="With Icons">
+    ```typescript
+    const breadcrumbItems = [
+      { label: 'Home', href: '/', icon: 'home' },
+      { label: 'Clients', href: '/clients', icon: 'users' },
+      { label: 'John Doe', icon: 'user' },
+    ];
+
+    <Breadcrumbs items={breadcrumbItems} showIcons />
+    ```
+  </Tab>
+  <Tab title="Auto-generated">
+    ```typescript
+    import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
+
+    function PageHeader() {
+      const breadcrumbs = useBreadcrumbs();
+
+      return <Breadcrumbs items={breadcrumbs} />;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### Breadcrumbs Props
+
+<ParamField path="items" type="BreadcrumbItem[]" required>
+  Array of breadcrumb items with label and optional href
+</ParamField>
+
+<ParamField path="separator" type="string | ReactNode" default="/">
+  Separator character or component between items
+</ParamField>
+
+<ParamField path="maxItems" type="number">
+  Maximum number of items to display before collapsing
+</ParamField>
+
+<ParamField path="showIcons" type="boolean" default={false}>
+  Display icons for each breadcrumb item
+</ParamField>
+
+## Tabs Component
+
+Organize content into tabbed interfaces.
+
+<CodeGroup>
+```typescript Basic Tabs
+import { Tabs, TabList, Tab, TabPanel } from '@/components/navigation';
+
+function ClientDetails() {
+  return (
+    <Tabs defaultValue="overview">
+      <TabList>
+        <Tab value="overview">Overview</Tab>
+        <Tab value="projects">Projects</Tab>
+        <Tab value="documents">Documents</Tab>
+        <Tab value="activity">Activity</Tab>
+      </TabList>
+
+      <TabPanel value="overview">
+        <ClientOverview />
+      </TabPanel>
+      <TabPanel value="projects">
+        <ClientProjects />
+      </TabPanel>
+      <TabPanel value="documents">
+        <ClientDocuments />
+      </TabPanel>
+      <TabPanel value="activity">
+        <ClientActivity />
+      </TabPanel>
+    </Tabs>
+  );
+}
+```
+
+```typescript With Icons
+<Tabs defaultValue="overview">
+  <TabList>
+    <Tab value="overview" icon="eye">
+      Overview
+    </Tab>
+    <Tab value="projects" icon="briefcase">
+      Projects
+    </Tab>
+    <Tab value="documents" icon="file">
+      Documents
+    </Tab>
+    <Tab value="activity" icon="clock">
+      Activity
+    </Tab>
+  </TabList>
+  {/* Tab panels */}
+</Tabs>
+```
+
+```typescript With Badges
+<Tabs defaultValue="all">
+  <TabList>
+    <Tab value="all">
+      All
+      <Badge>24</Badge>
+    </Tab>
+    <Tab value="active">
+      Active
+      <Badge variant="success">18</Badge>
+    </Tab>
+    <Tab value="pending">
+      Pending
+      <Badge variant="warning">6</Badge>
+    </Tab>
+  </TabList>
+  {/* Tab panels */}
+</Tabs>
+```
+</CodeGroup>
+
+### Tabs Props
+
+<ParamField path="defaultValue" type="string">
+  Initial active tab value
+</ParamField>
+
+<ParamField path="value" type="string">
+  Controlled active tab value
+</ParamField>
+
+<ParamField path="onChange" type="function">
+  Callback when active tab changes
+</ParamField>
+
+<ParamField path="variant" type="'default' | 'pills' | 'underline'" default="default">
+  Visual style variant
+</ParamField>
+
+## Pagination Component
+
+Navigate through pages of content.
+
+```typescript
+import { Pagination } from '@/components/navigation';
+
+function ClientList() {
+  const [page, setPage] = useState(1);
+  const pageSize = 25;
+  const totalItems = 250;
+
+  return (
+    <>
+      {/* Content */}
+      <Pagination
+        current={page}
+        pageSize={pageSize}
+        total={totalItems}
+        onChange={setPage}
+        showSizeChanger
+        pageSizeOptions={[10, 25, 50, 100]}
+        showTotal={(total, range) =>
+          `${range[0]}-${range[1]} of ${total} items`
+        }
+      />
+    </>
+  );
+}
+```
+
+### Pagination Props
+
+<ParamField path="current" type="number" required>
+  Current page number (1-indexed)
+</ParamField>
+
+<ParamField path="total" type="number" required>
+  Total number of items
+</ParamField>
+
+<ParamField path="pageSize" type="number" default={10}>
+  Number of items per page
+</ParamField>
+
+<ParamField path="onChange" type="function" required>
+  Callback when page changes
+</ParamField>
+
+<ParamField path="showSizeChanger" type="boolean" default={false}>
+  Show page size selector
+</ParamField>
+
+<ParamField path="pageSizeOptions" type="number[]" default="[10, 20, 50, 100]">
+  Available page size options
+</ParamField>
+
+<ParamField path="showQuickJumper" type="boolean" default={false}>
+  Show quick page jump input
+</ParamField>
+
+<ParamField path="showTotal" type="function">
+  Custom render function for total text
+</ParamField>
+
+## Stepper Component
+
+Guide users through multi-step processes.
+
+```typescript
+import { Stepper, Step } from '@/components/navigation';
+
+function InstallationWizard() {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const steps = [
+    {
+      title: 'Client Information',
+      description: 'Basic client details',
+    },
+    {
+      title: 'System Configuration',
+      description: 'Solar panel specifications',
+    },
+    {
+      title: 'Installation Details',
+      description: 'Schedule and location',
+    },
+    {
+      title: 'Review & Confirm',
+      description: 'Review all information',
+    },
+  ];
+
+  return (
+    <div>
+      <Stepper current={currentStep}>
+        {steps.map((step, index) => (
+          <Step
+            key={index}
+            title={step.title}
+            description={step.description}
+          />
+        ))}
+      </Stepper>
+
+      <div className="step-content">
+        {currentStep === 0 && <ClientInfoForm />}
+        {currentStep === 1 && <SystemConfigForm />}
+        {currentStep === 2 && <InstallationDetailsForm />}
+        {currentStep === 3 && <ReviewConfirm />}
+      </div>
+
+      <div className="step-actions">
+        {currentStep > 0 && (
+          <Button onClick={() => setCurrentStep(currentStep - 1)}>
+            Previous
+          </Button>
+        )}
+        {currentStep < steps.length - 1 && (
+          <Button onClick={() => setCurrentStep(currentStep + 1)}>
+            Next
+          </Button>
+        )}
+        {currentStep === steps.length - 1 && (
+          <Button variant="primary" onClick={handleSubmit}>
+            Complete
+          </Button>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+### Stepper Props
+
+<ParamField path="current" type="number" required>
+  Current active step (0-indexed)
+</ParamField>
+
+<ParamField path="direction" type="'horizontal' | 'vertical'" default="horizontal">
+  Stepper layout direction
+</ParamField>
+
+<ParamField path="status" type="'wait' | 'process' | 'finish' | 'error'">
+  Status of the current step
+</ParamField>
+
+## Complete Navigation Example
+
+```typescript
+import {
+  MainNav,
+  Sidebar,
+  Breadcrumbs,
+  Tabs,
+} from '@/components/navigation';
+import { useBreadcrumbs } from '@/hooks/useBreadcrumbs';
+
+function AppLayout({ children }) {
+  const breadcrumbs = useBreadcrumbs();
+
+  const mainNavItems = [
+    { label: 'Dashboard', href: '/dashboard', icon: 'home' },
+    { label: 'Clients', href: '/clients', icon: 'users' },
+    { label: 'Projects', href: '/projects', icon: 'briefcase' },
+    { label: 'Reports', href: '/reports', icon: 'chart-bar' },
+  ];
+
+  const sidebarItems = [
+    {
+      label: 'Overview',
+      href: '/dashboard',
+      icon: 'home',
+    },
+    {
+      label: 'Client Management',
+      icon: 'users',
+      children: [
+        { label: 'All Clients', href: '/clients' },
+        { label: 'Add Client', href: '/clients/new' },
+        { label: 'Import', href: '/clients/import' },
+      ],
+    },
+    {
+      label: 'Projects',
+      icon: 'briefcase',
+      children: [
+        { label: 'All Projects', href: '/projects' },
+        { label: 'Create Project', href: '/projects/new' },
+        { label: 'Templates', href: '/projects/templates' },
+      ],
+    },
+    {
+      label: 'Analytics',
+      href: '/analytics',
+      icon: 'chart-line',
+    },
+  ];
+
+  return (
+    <div className="app-layout">
+      <MainNav items={mainNavItems} />
+      <div className="flex">
+        <Sidebar
+          items={sidebarItems}
+          collapsible
+          defaultCollapsed={false}
+        />
+        <main className="flex-1">
+          <div className="p-6">
+            <Breadcrumbs items={breadcrumbs} />
+            {children}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Clear Labels" icon="tag">
+    Use clear, concise labels that accurately describe destinations
+  </Card>
+  <Card title="Active States" icon="location-dot">
+    Always indicate the current location with clear visual feedback
+  </Card>
+  <Card title="Keyboard Navigation" icon="keyboard">
+    Ensure all navigation is accessible via keyboard shortcuts
+  </Card>
+  <Card title="Mobile Responsive" icon="mobile">
+    Provide mobile-friendly navigation patterns like hamburger menus
+  </Card>
+</CardGroup>

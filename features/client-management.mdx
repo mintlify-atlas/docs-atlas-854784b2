@@ -1,0 +1,433 @@
+---
+title: 'Client Management'
+description: 'Comprehensive client data management and relationship tracking'
+icon: 'users'
+---
+
+## Overview
+
+Solarecliente provides powerful client management capabilities that enable you to maintain detailed customer records, track interactions, and manage relationships efficiently. The client management system is designed to streamline your workflow and provide quick access to critical client information.
+
+<CardGroup cols={2}>
+  <Card title="Client Profiles" icon="user" href="#client-profiles">
+    Create and maintain detailed client information with custom fields
+  </Card>
+  <Card title="Contact Management" icon="address-book" href="#contact-management">
+    Track multiple contacts per client with role assignments
+  </Card>
+  <Card title="Activity Timeline" icon="clock" href="#activity-timeline">
+    Monitor all client interactions and touchpoints in one place
+  </Card>
+  <Card title="Document Storage" icon="folder" href="#document-storage">
+    Securely store and organize client documents and files
+  </Card>
+</CardGroup>
+
+## Client Profiles
+
+Client profiles serve as the central repository for all customer information. Each profile includes both standard and customizable fields to capture the data most relevant to your business.
+
+### Creating a New Client
+
+<Steps>
+  <Step title="Navigate to Clients">
+    Click on the **Clients** menu item in the main navigation or use the quick action button from the dashboard.
+  </Step>
+  
+  <Step title="Add Client Information">
+    Fill in the required fields including:
+    - Company name or individual name
+    - Primary email address
+    - Phone number
+    - Business address
+    - Industry/sector
+  </Step>
+  
+  <Step title="Configure Client Settings">
+    Set client-specific preferences:
+    - Preferred communication method
+    - Language preference
+    - Timezone
+    - Account status (Active, Prospective, Inactive)
+  </Step>
+  
+  <Step title="Save and Continue">
+    Save the client profile to access additional features like contact management and document uploads.
+  </Step>
+</Steps>
+
+### Client Profile Fields
+
+<Tabs>
+  <Tab title="Basic Information">
+    ```javascript
+    {
+      clientId: "CLT-2024-001",
+      name: "Acme Corporation",
+      email: "contact@acme.com",
+      phone: "+1 (555) 123-4567",
+      website: "https://acme.com",
+      industry: "Technology",
+      status: "Active"
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Address Details">
+    ```javascript
+    {
+      address: {
+        street: "123 Business Ave",
+        city: "San Francisco",
+        state: "CA",
+        postalCode: "94105",
+        country: "United States"
+      },
+      billingAddress: {
+        sameAsPhysical: true
+      }
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Custom Fields">
+    ```javascript
+    {
+      customFields: {
+        accountManager: "John Smith",
+        contractValue: 50000,
+        renewalDate: "2024-12-31",
+        priority: "High",
+        tags: ["Enterprise", "VIP", "North America"]
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Contact Management
+
+Manage multiple contacts within each client organization, including decision-makers, technical contacts, and billing contacts.
+
+### Adding Contacts
+
+Each client can have unlimited associated contacts with specific roles and responsibilities:
+
+```typescript
+interface Contact {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  role: 'Primary' | 'Billing' | 'Technical' | 'Executive';
+  department?: string;
+  title?: string;
+  isPrimary: boolean;
+}
+```
+
+<Info>
+  **Pro Tip:** Mark one contact as primary to streamline communications. The primary contact will be automatically selected for notifications and correspondence.
+</Info>
+
+### Contact Roles
+
+<CardGroup cols={2}>
+  <Card title="Primary Contact" icon="star">
+    Main point of contact for general communications
+  </Card>
+  <Card title="Billing Contact" icon="credit-card">
+    Handles invoicing and payment-related matters
+  </Card>
+  <Card title="Technical Contact" icon="code">
+    Technical implementation and support liaison
+  </Card>
+  <Card title="Executive Sponsor" icon="briefcase">
+    C-level or senior management stakeholder
+  </Card>
+</CardGroup>
+
+## Activity Timeline
+
+The activity timeline provides a chronological view of all interactions, changes, and touchpoints with each client.
+
+### Tracked Activities
+
+Solarecliente automatically logs various activities:
+
+- **Communications**: Emails, calls, meetings, and messages
+- **Changes**: Profile updates, status changes, and modifications
+- **Transactions**: Orders, invoices, and payments
+- **Documents**: File uploads, downloads, and shares
+- **Notes**: Manual notes and observations added by team members
+
+### Activity Examples
+
+```javascript
+const activities = [
+  {
+    type: 'email',
+    timestamp: '2024-03-11T10:30:00Z',
+    user: 'sarah.johnson@company.com',
+    subject: 'Q1 Business Review',
+    description: 'Sent quarterly review presentation'
+  },
+  {
+    type: 'meeting',
+    timestamp: '2024-03-10T14:00:00Z',
+    user: 'mike.chen@company.com',
+    duration: 60,
+    description: 'Discovery call - discussed new requirements'
+  },
+  {
+    type: 'note',
+    timestamp: '2024-03-09T16:45:00Z',
+    user: 'emily.davis@company.com',
+    description: 'Client interested in enterprise plan upgrade'
+  }
+];
+```
+
+<Note>
+  Activities are visible to all team members with access to the client record, promoting collaboration and information sharing.
+</Note>
+
+## Document Storage
+
+Securely store and organize all client-related documents within their profile.
+
+### Supported File Types
+
+<Tabs>
+  <Tab title="Documents">
+    - PDF (.pdf)
+    - Microsoft Word (.doc, .docx)
+    - Microsoft Excel (.xls, .xlsx)
+    - Text files (.txt)
+    - Rich text (.rtf)
+  </Tab>
+  
+  <Tab title="Images">
+    - JPEG (.jpg, .jpeg)
+    - PNG (.png)
+    - GIF (.gif)
+    - SVG (.svg)
+    - WebP (.webp)
+  </Tab>
+  
+  <Tab title="Other">
+    - CSV (.csv)
+    - JSON (.json)
+    - XML (.xml)
+    - ZIP archives (.zip)
+  </Tab>
+</Tabs>
+
+### Document Organization
+
+Organize documents into custom folders:
+
+```typescript
+interface DocumentStructure {
+  folders: [
+    {
+      name: 'Contracts',
+      files: ['service-agreement.pdf', 'nda.pdf']
+    },
+    {
+      name: 'Proposals',
+      files: ['q1-proposal.docx', 'pricing-sheet.xlsx']
+    },
+    {
+      name: 'Invoices',
+      files: ['invoice-001.pdf', 'invoice-002.pdf']
+    }
+  ];
+}
+```
+
+### File Upload
+
+<Steps>
+  <Step title="Select Upload Location">
+    Navigate to the client profile and select the Documents tab.
+  </Step>
+  
+  <Step title="Choose Files">
+    Click the upload button and select files from your computer, or drag and drop files directly into the browser.
+  </Step>
+  
+  <Step title="Add Metadata">
+    Optionally add tags, descriptions, and assign files to specific folders.
+  </Step>
+  
+  <Step title="Set Permissions">
+    Configure who can view, download, or edit the uploaded files.
+  </Step>
+</Steps>
+
+<Info>
+  Maximum file size: 50MB per file. For larger files, consider using cloud storage integration.
+</Info>
+
+## Search and Filtering
+
+Quickly locate clients using powerful search and filtering capabilities.
+
+### Search Options
+
+```javascript
+const searchParams = {
+  query: 'acme',           // Full-text search
+  filters: {
+    status: ['Active'],
+    industry: ['Technology', 'Finance'],
+    tags: ['Enterprise'],
+    dateRange: {
+      from: '2024-01-01',
+      to: '2024-12-31'
+    }
+  },
+  sort: {
+    field: 'lastActivity',
+    order: 'desc'
+  }
+};
+```
+
+### Advanced Filters
+
+<CardGroup cols={3}>
+  <Card title="By Status" icon="circle-check">
+    Active, Inactive, Prospective, Churned
+  </Card>
+  <Card title="By Value" icon="dollar-sign">
+    Contract value ranges and revenue tiers
+  </Card>
+  <Card title="By Activity" icon="chart-line">
+    Last contact date, engagement level
+  </Card>
+  <Card title="By Location" icon="location-dot">
+    Geographic region, country, city
+  </Card>
+  <Card title="By Industry" icon="building">
+    Business sector and vertical
+  </Card>
+  <Card title="By Tags" icon="tags">
+    Custom labels and categories
+  </Card>
+</CardGroup>
+
+## Bulk Operations
+
+Perform actions on multiple clients simultaneously to save time.
+
+### Available Bulk Actions
+
+- **Update Tags**: Add or remove tags from selected clients
+- **Change Status**: Update client status in bulk
+- **Assign Owner**: Reassign account management responsibilities
+- **Export Data**: Download client information as CSV or JSON
+- **Send Communications**: Email multiple clients at once
+
+```typescript
+const bulkUpdate = {
+  clientIds: ['CLT-001', 'CLT-002', 'CLT-003'],
+  operation: 'addTags',
+  data: {
+    tags: ['Q1-Campaign', 'Special-Offer']
+  }
+};
+```
+
+<Note>
+  Bulk operations are logged in the system audit trail for compliance and tracking purposes.
+</Note>
+
+## Client Segmentation
+
+Create dynamic segments to group clients based on shared characteristics.
+
+### Segment Examples
+
+```javascript
+const segments = [
+  {
+    name: 'High-Value Clients',
+    criteria: {
+      contractValue: { min: 100000 },
+      status: 'Active'
+    }
+  },
+  {
+    name: 'At-Risk Accounts',
+    criteria: {
+      lastActivity: { olderThan: '90 days' },
+      status: 'Active'
+    }
+  },
+  {
+    name: 'Enterprise Prospects',
+    criteria: {
+      status: 'Prospective',
+      companySize: { min: 1000 }
+    }
+  }
+];
+```
+
+<Info>
+  Segments update automatically as client data changes, ensuring your lists are always current.
+</Info>
+
+## Data Import/Export
+
+Seamlessly import existing client data or export information for analysis.
+
+### Import Clients
+
+<Steps>
+  <Step title="Prepare CSV File">
+    Download the template file and populate it with your client data.
+  </Step>
+  
+  <Step title="Map Fields">
+    Match your CSV columns to Solarecliente fields.
+  </Step>
+  
+  <Step title="Validate Data">
+    Review any validation errors or warnings before import.
+  </Step>
+  
+  <Step title="Complete Import">
+    Confirm the import to add clients to your database.
+  </Step>
+</Steps>
+
+### Export Formats
+
+<Tabs>
+  <Tab title="CSV">
+    ```csv
+    Client ID,Name,Email,Phone,Status,Industry
+    CLT-001,Acme Corp,contact@acme.com,555-1234,Active,Technology
+    CLT-002,Global Inc,info@global.com,555-5678,Active,Finance
+    ```
+  </Tab>
+  
+  <Tab title="JSON">
+    ```json
+    [
+      {
+        "clientId": "CLT-001",
+        "name": "Acme Corp",
+        "email": "contact@acme.com",
+        "phone": "555-1234",
+        "status": "Active",
+        "industry": "Technology"
+      }
+    ]
+    ```
+  </Tab>
+</Tabs>

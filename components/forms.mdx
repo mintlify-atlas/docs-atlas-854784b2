@@ -1,0 +1,476 @@
+---
+title: 'Form Components'
+description: 'Comprehensive guide to form components and validation in Solarecliente'
+icon: 'file-input'
+---
+
+## Overview
+
+Solarecliente provides a complete set of form components with built-in validation, error handling, and accessibility features. All form components integrate seamlessly with popular form libraries like React Hook Form and Formik.
+
+## Form Component
+
+The base `Form` component provides form state management and submission handling.
+
+### Basic Usage
+
+```typescript
+import { Form } from '@/components/forms';
+
+function ClientForm() {
+  const handleSubmit = (data) => {
+    console.log('Form data:', data);
+  };
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      {/* Form fields */}
+    </Form>
+  );
+}
+```
+
+### Props
+
+<ParamField path="onSubmit" type="function" required>
+  Callback function invoked when form is submitted with validated data
+</ParamField>
+
+<ParamField path="initialValues" type="object">
+  Initial values for form fields
+</ParamField>
+
+<ParamField path="validationSchema" type="object">
+  Validation schema (Yup or Zod)
+</ParamField>
+
+<ParamField path="className" type="string">
+  Additional CSS classes to apply to the form
+</ParamField>
+
+## Input Component
+
+The `Input` component supports various input types with validation and error display.
+
+<Tabs>
+  <Tab title="Text Input">
+    ```typescript
+    <Input
+      name="clientName"
+      label="Client Name"
+      placeholder="Enter client name"
+      required
+    />
+    ```
+  </Tab>
+  <Tab title="Email Input">
+    ```typescript
+    <Input
+      name="email"
+      type="email"
+      label="Email Address"
+      placeholder="client@example.com"
+      required
+    />
+    ```
+  </Tab>
+  <Tab title="Password Input">
+    ```typescript
+    <Input
+      name="password"
+      type="password"
+      label="Password"
+      showPasswordToggle
+      required
+    />
+    ```
+  </Tab>
+  <Tab title="Number Input">
+    ```typescript
+    <Input
+      name="panelCount"
+      type="number"
+      label="Number of Panels"
+      min={1}
+      max={100}
+      step={1}
+    />
+    ```
+  </Tab>
+</Tabs>
+
+### Input Props
+
+<ParamField path="name" type="string" required>
+  Unique identifier for the input field
+</ParamField>
+
+<ParamField path="label" type="string" required>
+  Label text displayed above the input
+</ParamField>
+
+<ParamField path="type" type="string" default="text">
+  Input type: `text`, `email`, `password`, `number`, `tel`, `url`
+</ParamField>
+
+<ParamField path="placeholder" type="string">
+  Placeholder text displayed when input is empty
+</ParamField>
+
+<ParamField path="required" type="boolean" default={false}>
+  Whether the field is required
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default={false}>
+  Whether the input is disabled
+</ParamField>
+
+<ParamField path="error" type="string">
+  Error message to display below the input
+</ParamField>
+
+<ParamField path="helperText" type="string">
+  Helper text displayed below the input
+</ParamField>
+
+## Select Component
+
+Dropdown select component with support for single and multi-select.
+
+<CodeGroup>
+```typescript Single Select
+<Select
+  name="status"
+  label="Client Status"
+  options={[
+    { value: 'active', label: 'Active' },
+    { value: 'inactive', label: 'Inactive' },
+    { value: 'pending', label: 'Pending' },
+  ]}
+  placeholder="Select status"
+/>
+```
+
+```typescript Multi Select
+<Select
+  name="services"
+  label="Services"
+  multiple
+  options={[
+    { value: 'installation', label: 'Installation' },
+    { value: 'maintenance', label: 'Maintenance' },
+    { value: 'consultation', label: 'Consultation' },
+  ]}
+  placeholder="Select services"
+/>
+```
+
+```typescript With Groups
+<Select
+  name="region"
+  label="Region"
+  options={[
+    {
+      label: 'North America',
+      options: [
+        { value: 'us', label: 'United States' },
+        { value: 'ca', label: 'Canada' },
+      ],
+    },
+    {
+      label: 'Europe',
+      options: [
+        { value: 'uk', label: 'United Kingdom' },
+        { value: 'de', label: 'Germany' },
+      ],
+    },
+  ]}
+/>
+```
+</CodeGroup>
+
+### Select Props
+
+<ParamField path="options" type="array" required>
+  Array of options with `value` and `label` properties
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default={false}>
+  Enable multi-select functionality
+</ParamField>
+
+<ParamField path="searchable" type="boolean" default={false}>
+  Enable search/filter functionality
+</ParamField>
+
+<ParamField path="clearable" type="boolean" default={false}>
+  Show clear button to reset selection
+</ParamField>
+
+## Textarea Component
+
+Multi-line text input for longer content.
+
+```typescript
+<Textarea
+  name="notes"
+  label="Additional Notes"
+  placeholder="Enter any additional information"
+  rows={4}
+  maxLength={500}
+/>
+```
+
+### Textarea Props
+
+<ParamField path="rows" type="number" default={3}>
+  Number of visible text rows
+</ParamField>
+
+<ParamField path="maxLength" type="number">
+  Maximum character count
+</ParamField>
+
+<ParamField path="showCharCount" type="boolean" default={false}>
+  Display character counter
+</ParamField>
+
+## Checkbox Component
+
+```typescript
+<Checkbox
+  name="terms"
+  label="I agree to the terms and conditions"
+  required
+/>
+```
+
+### Checkbox Group
+
+```typescript
+<CheckboxGroup
+  name="features"
+  label="Required Features"
+  options={[
+    { value: 'monitoring', label: 'Real-time Monitoring' },
+    { value: 'analytics', label: 'Analytics Dashboard' },
+    { value: 'alerts', label: 'Email Alerts' },
+  ]}
+/>
+```
+
+## Radio Component
+
+```typescript
+<RadioGroup
+  name="installationType"
+  label="Installation Type"
+  options={[
+    { value: 'residential', label: 'Residential' },
+    { value: 'commercial', label: 'Commercial' },
+    { value: 'industrial', label: 'Industrial' },
+  ]}
+  required
+/>
+```
+
+## DatePicker Component
+
+```typescript
+<DatePicker
+  name="installationDate"
+  label="Installation Date"
+  minDate={new Date()}
+  format="MM/DD/YYYY"
+  placeholder="Select date"
+/>
+```
+
+### DatePicker Props
+
+<ParamField path="minDate" type="Date">
+  Minimum selectable date
+</ParamField>
+
+<ParamField path="maxDate" type="Date">
+  Maximum selectable date
+</ParamField>
+
+<ParamField path="format" type="string" default="MM/DD/YYYY">
+  Date display format
+</ParamField>
+
+<ParamField path="showTimeSelect" type="boolean" default={false}>
+  Enable time selection
+</ParamField>
+
+## Form Validation
+
+### Using Zod Schema
+
+```typescript
+import { z } from 'zod';
+import { useForm } from '@/hooks/useForm';
+
+const clientSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  phone: z.string().regex(/^\d{10}$/, 'Phone must be 10 digits'),
+  installationDate: z.date().min(new Date(), 'Date must be in the future'),
+  panelCount: z.number().min(1).max(100),
+});
+
+function ClientForm() {
+  const { register, handleSubmit, errors } = useForm({
+    schema: clientSchema,
+  });
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Input
+        {...register('name')}
+        label="Client Name"
+        error={errors.name?.message}
+      />
+      <Input
+        {...register('email')}
+        type="email"
+        label="Email"
+        error={errors.email?.message}
+      />
+      {/* Additional fields */}
+    </Form>
+  );
+}
+```
+
+### Custom Validation
+
+```typescript
+const validatePhone = (value: string) => {
+  if (!/^\d{10}$/.test(value)) {
+    return 'Phone number must be 10 digits';
+  }
+  return true;
+};
+
+<Input
+  name="phone"
+  label="Phone Number"
+  validate={validatePhone}
+/>
+```
+
+## Complete Form Example
+
+```typescript
+import { Form, Input, Select, DatePicker, Textarea, Button } from '@/components';
+import { z } from 'zod';
+
+const schema = z.object({
+  clientName: z.string().min(2),
+  email: z.string().email(),
+  phone: z.string().regex(/^\d{10}$/),
+  serviceType: z.string(),
+  installationDate: z.date(),
+  panelCount: z.number().min(1).max(100),
+  notes: z.string().optional(),
+});
+
+function NewClientForm() {
+  const handleSubmit = async (data) => {
+    try {
+      await createClient(data);
+      toast.success('Client created successfully');
+    } catch (error) {
+      toast.error('Failed to create client');
+    }
+  };
+
+  return (
+    <Form
+      validationSchema={schema}
+      onSubmit={handleSubmit}
+      className="max-w-2xl mx-auto"
+    >
+      <div className="grid grid-cols-2 gap-4">
+        <Input
+          name="clientName"
+          label="Client Name"
+          placeholder="John Doe"
+          required
+        />
+        <Input
+          name="email"
+          type="email"
+          label="Email Address"
+          placeholder="john@example.com"
+          required
+        />
+        <Input
+          name="phone"
+          type="tel"
+          label="Phone Number"
+          placeholder="1234567890"
+          required
+        />
+        <Select
+          name="serviceType"
+          label="Service Type"
+          options={[
+            { value: 'installation', label: 'Installation' },
+            { value: 'maintenance', label: 'Maintenance' },
+            { value: 'repair', label: 'Repair' },
+          ]}
+          required
+        />
+        <DatePicker
+          name="installationDate"
+          label="Installation Date"
+          minDate={new Date()}
+          required
+        />
+        <Input
+          name="panelCount"
+          type="number"
+          label="Number of Panels"
+          min={1}
+          max={100}
+          required
+        />
+      </div>
+      <Textarea
+        name="notes"
+        label="Additional Notes"
+        placeholder="Any special requirements or notes"
+        rows={4}
+      />
+      <div className="flex gap-3 justify-end">
+        <Button type="button" variant="secondary">
+          Cancel
+        </Button>
+        <Button type="submit" variant="primary">
+          Create Client
+        </Button>
+      </div>
+    </Form>
+  );
+}
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Validate Early" icon="shield-check">
+    Use client-side validation to provide immediate feedback to users
+  </Card>
+  <Card title="Clear Error Messages" icon="message-exclamation">
+    Write descriptive error messages that help users fix issues
+  </Card>
+  <Card title="Accessibility" icon="universal-access">
+    Always include proper labels and ARIA attributes for screen readers
+  </Card>
+  <Card title="Loading States" icon="spinner">
+    Disable form inputs and show loading indicators during submission
+  </Card>
+</CardGroup>

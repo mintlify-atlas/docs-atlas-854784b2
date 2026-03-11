@@ -1,0 +1,628 @@
+---
+title: 'Dashboard & Analytics'
+description: 'Real-time insights and analytics for your client portfolio'
+icon: 'chart-line'
+---
+
+## Overview
+
+The Solarecliente dashboard provides a comprehensive view of your client portfolio with real-time metrics, visual analytics, and actionable insights. Monitor key performance indicators, track trends, and make data-driven decisions to optimize your client relationships.
+
+<CardGroup cols={2}>
+  <Card title="Key Metrics" icon="gauge-high" href="#key-metrics">
+    Track essential KPIs and performance indicators
+  </Card>
+  <Card title="Custom Widgets" icon="grid" href="#custom-widgets">
+    Personalize your dashboard with configurable widgets
+  </Card>
+  <Card title="Real-time Updates" icon="bolt" href="#real-time-updates">
+    Get instant updates on critical activities and changes
+  </Card>
+  <Card title="Export Reports" icon="file-export" href="#reporting">
+    Generate and export detailed reports for stakeholders
+  </Card>
+</CardGroup>
+
+## Key Metrics
+
+The dashboard displays critical metrics at a glance, helping you understand the health of your client portfolio.
+
+### Primary KPIs
+
+<Tabs>
+  <Tab title="Client Metrics">
+    ```typescript
+    interface ClientMetrics {
+      totalClients: number;           // Total active clients
+      newClients: number;             // New clients this month
+      churnRate: number;              // Percentage of lost clients
+      activeClients: number;          // Clients with recent activity
+      prospectiveClients: number;     // Potential clients in pipeline
+    }
+    
+    const example: ClientMetrics = {
+      totalClients: 247,
+      newClients: 12,
+      churnRate: 2.3,
+      activeClients: 231,
+      prospectiveClients: 45
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Revenue Metrics">
+    ```typescript
+    interface RevenueMetrics {
+      totalRevenue: number;           // Total revenue
+      monthlyRecurring: number;       // MRR
+      averageContractValue: number;   // ACV
+      revenueGrowth: number;          // Growth percentage
+      projectedRevenue: number;       // Forecast
+    }
+    
+    const example: RevenueMetrics = {
+      totalRevenue: 1250000,
+      monthlyRecurring: 95000,
+      averageContractValue: 5060,
+      revenueGrowth: 15.7,
+      projectedRevenue: 1450000
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Activity Metrics">
+    ```typescript
+    interface ActivityMetrics {
+      totalInteractions: number;      // All client touchpoints
+      emailsSent: number;             // Outbound emails
+      meetingsHeld: number;           // Client meetings
+      documentsShared: number;        // Files shared
+      averageResponseTime: number;    // Hours
+    }
+    
+    const example: ActivityMetrics = {
+      totalInteractions: 1247,
+      emailsSent: 856,
+      meetingsHeld: 123,
+      documentsShared: 268,
+      averageResponseTime: 4.2
+    };
+    ```
+  </Tab>
+</Tabs>
+
+### Metric Cards
+
+The dashboard displays metrics in easy-to-read card format:
+
+<CardGroup cols={3}>
+  <Card title="Total Clients" icon="users">
+    **247** Active Clients
+    
+    <sub>↑ 12 this month (+5.1%)</sub>
+  </Card>
+  <Card title="Revenue" icon="dollar-sign">
+    **$1.25M** Total Revenue
+    
+    <sub>↑ $180K this quarter (+15.7%)</sub>
+  </Card>
+  <Card title="Engagement" icon="heart">
+    **94%** Active Rate
+    
+    <sub>↑ 2.3% from last month</sub>
+  </Card>
+  <Card title="Response Time" icon="clock">
+    **4.2 hrs** Average
+    
+    <sub>↓ 0.8 hrs from last month</sub>
+  </Card>
+  <Card title="New Prospects" icon="sparkles">
+    **45** In Pipeline
+    
+    <sub>↑ 8 this week</sub>
+  </Card>
+  <Card title="Renewals Due" icon="calendar">
+    **23** This Quarter
+    
+    <sub>$470K total value</sub>
+  </Card>
+</CardGroup>
+
+## Custom Widgets
+
+Personalize your dashboard by adding, removing, and arranging widgets to match your workflow.
+
+### Available Widgets
+
+<Steps>
+  <Step title="Client Overview">
+    Displays client count, status distribution, and recent additions.
+    
+    ```javascript
+    {
+      type: 'clientOverview',
+      config: {
+        showTrends: true,
+        timeRange: '30d',
+        groupBy: 'status'
+      }
+    }
+    ```
+  </Step>
+  
+  <Step title="Activity Feed">
+    Real-time stream of recent client activities and interactions.
+    
+    ```javascript
+    {
+      type: 'activityFeed',
+      config: {
+        maxItems: 10,
+        filters: ['email', 'meeting', 'note'],
+        autoRefresh: true
+      }
+    }
+    ```
+  </Step>
+  
+  <Step title="Revenue Chart">
+    Visual representation of revenue trends over time.
+    
+    ```javascript
+    {
+      type: 'revenueChart',
+      config: {
+        chartType: 'line',
+        timeRange: '12m',
+        showProjection: true
+      }
+    }
+    ```
+  </Step>
+  
+  <Step title="Task List">
+    Upcoming tasks, follow-ups, and action items.
+    
+    ```javascript
+    {
+      type: 'taskList',
+      config: {
+        showOverdue: true,
+        maxItems: 15,
+        sortBy: 'dueDate'
+      }
+    }
+    ```
+  </Step>
+</Steps>
+
+### Widget Configuration
+
+<Tabs>
+  <Tab title="Add Widget">
+    ```typescript
+    const addWidget = async (config: WidgetConfig) => {
+      const widget = {
+        id: generateId(),
+        type: config.type,
+        position: { x: 0, y: 0, w: 4, h: 3 },
+        settings: config.settings,
+        visible: true
+      };
+      
+      await dashboard.addWidget(widget);
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Customize Layout">
+    ```typescript
+    const updateLayout = (layout: WidgetLayout[]) => {
+      dashboard.setLayout(layout.map(widget => ({
+        id: widget.id,
+        x: widget.x,
+        y: widget.y,
+        width: widget.w,
+        height: widget.h
+      })));
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Save Preset">
+    ```typescript
+    const savePreset = async (name: string) => {
+      const currentLayout = dashboard.getLayout();
+      const preset = {
+        name,
+        widgets: currentLayout,
+        createdAt: new Date().toISOString()
+      };
+      
+      await dashboard.savePreset(preset);
+    };
+    ```
+  </Tab>
+</Tabs>
+
+<Info>
+  **Pro Tip:** Create multiple dashboard presets for different use cases, such as "Executive Overview", "Daily Operations", or "Sales Focus".
+</Info>
+
+## Real-time Updates
+
+The dashboard automatically refreshes to display the latest information without manual page reloads.
+
+### Update Frequency
+
+```typescript
+interface UpdateSettings {
+  metrics: {
+    interval: 60,        // Seconds
+    enabled: true
+  },
+  activities: {
+    interval: 30,        // Seconds
+    enabled: true,
+    showNotifications: true
+  },
+  charts: {
+    interval: 300,       // Seconds
+    enabled: true
+  }
+}
+```
+
+### Live Activity Notifications
+
+<CardGroup cols={2}>
+  <Card title="New Client" icon="user-plus">
+    Instant notification when a new client is added to the system
+  </Card>
+  <Card title="Status Change" icon="arrows-rotate">
+    Alert when a client status changes (e.g., Prospective to Active)
+  </Card>
+  <Card title="High-Value Activity" icon="bell">
+    Notification for significant events like large contracts or escalations
+  </Card>
+  <Card title="Task Due" icon="alarm-clock">
+    Reminder for upcoming or overdue tasks and follow-ups
+  </Card>
+</CardGroup>
+
+### WebSocket Connection
+
+```typescript
+// Real-time dashboard updates via WebSocket
+const connectDashboard = () => {
+  const ws = new WebSocket('wss://api.solarecliente.com/dashboard');
+  
+  ws.onmessage = (event) => {
+    const update = JSON.parse(event.data);
+    
+    switch (update.type) {
+      case 'metric_update':
+        updateMetricCard(update.metric, update.value);
+        break;
+      case 'new_activity':
+        prependActivityToFeed(update.activity);
+        break;
+      case 'alert':
+        showNotification(update.message, update.priority);
+        break;
+    }
+  };
+};
+```
+
+<Note>
+  Real-time updates require an active internet connection. If disconnected, the dashboard will display cached data and reconnect automatically.
+</Note>
+
+## Time Range Selection
+
+Analyze data across different time periods to identify trends and patterns.
+
+### Available Time Ranges
+
+<Tabs>
+  <Tab title="Quick Select">
+    ```javascript
+    const quickRanges = [
+      { label: 'Today', value: '1d' },
+      { label: 'This Week', value: '7d' },
+      { label: 'This Month', value: '30d' },
+      { label: 'This Quarter', value: '90d' },
+      { label: 'This Year', value: '365d' },
+      { label: 'All Time', value: 'all' }
+    ];
+    ```
+  </Tab>
+  
+  <Tab title="Custom Range">
+    ```javascript
+    const customRange = {
+      startDate: '2024-01-01',
+      endDate: '2024-03-31',
+      comparison: {
+        enabled: true,
+        period: 'previous'  // Compare to previous period
+      }
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Date Comparison">
+    ```javascript
+    const comparison = {
+      current: {
+        start: '2024-01-01',
+        end: '2024-03-31'
+      },
+      previous: {
+        start: '2023-10-01',
+        end: '2023-12-31'
+      },
+      showDelta: true,
+      showPercentChange: true
+    };
+    ```
+  </Tab>
+</Tabs>
+
+## Reporting
+
+Generate comprehensive reports for stakeholders, executives, and analysis purposes.
+
+### Report Types
+
+<CardGroup cols={2}>
+  <Card title="Executive Summary" icon="file-chart-column">
+    High-level overview of key metrics and business performance
+  </Card>
+  <Card title="Client Activity" icon="list-timeline">
+    Detailed breakdown of all client interactions and touchpoints
+  </Card>
+  <Card title="Revenue Analysis" icon="money-bill-trend-up">
+    Financial performance, revenue trends, and forecasting
+  </Card>
+  <Card title="Team Performance" icon="users-gear">
+    Individual and team productivity and engagement metrics
+  </Card>
+  <Card title="Custom Report" icon="wand-magic-sparkles">
+    Build custom reports with selected metrics and filters
+  </Card>
+  <Card title="Scheduled Reports" icon="calendar-clock">
+    Automatically generated and delivered reports on a schedule
+  </Card>
+</CardGroup>
+
+### Generate Report
+
+<Steps>
+  <Step title="Select Report Type">
+    Choose from predefined templates or create a custom report.
+  </Step>
+  
+  <Step title="Configure Parameters">
+    Set date range, filters, and specific metrics to include.
+    
+    ```typescript
+    const reportConfig = {
+      type: 'executive-summary',
+      dateRange: { start: '2024-01-01', end: '2024-03-31' },
+      metrics: ['revenue', 'clients', 'engagement'],
+      groupBy: 'month',
+      includeCharts: true
+    };
+    ```
+  </Step>
+  
+  <Step title="Customize Presentation">
+    Choose chart types, table formats, and visual styling.
+  </Step>
+  
+  <Step title="Export or Schedule">
+    Download immediately or schedule for automated delivery.
+  </Step>
+</Steps>
+
+### Export Formats
+
+```typescript
+const exportReport = async (reportId: string, format: string) => {
+  const formats = {
+    pdf: 'application/pdf',
+    excel: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    csv: 'text/csv',
+    json: 'application/json'
+  };
+  
+  const report = await generateReport(reportId);
+  return await report.export(format);
+};
+```
+
+<Info>
+  Scheduled reports can be delivered via email to multiple recipients automatically on daily, weekly, or monthly schedules.
+</Info>
+
+## Filters and Segmentation
+
+Apply filters to focus on specific segments of your client portfolio.
+
+### Available Filters
+
+<Tabs>
+  <Tab title="Client Status">
+    ```javascript
+    const statusFilter = {
+      field: 'status',
+      operator: 'in',
+      values: ['Active', 'Prospective']
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Revenue Range">
+    ```javascript
+    const revenueFilter = {
+      field: 'contractValue',
+      operator: 'between',
+      values: [50000, 200000]
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Industry">
+    ```javascript
+    const industryFilter = {
+      field: 'industry',
+      operator: 'in',
+      values: ['Technology', 'Finance', 'Healthcare']
+    };
+    ```
+  </Tab>
+  
+  <Tab title="Geography">
+    ```javascript
+    const geoFilter = {
+      field: 'location.country',
+      operator: 'in',
+      values: ['United States', 'Canada', 'Mexico']
+    };
+    ```
+  </Tab>
+</Tabs>
+
+### Saved Filter Sets
+
+Create and save commonly used filter combinations:
+
+```typescript
+const savedFilters = [
+  {
+    name: 'Enterprise Clients',
+    filters: [
+      { field: 'contractValue', operator: 'gte', value: 100000 },
+      { field: 'status', operator: 'eq', value: 'Active' }
+    ]
+  },
+  {
+    name: 'At-Risk Accounts',
+    filters: [
+      { field: 'lastActivity', operator: 'olderThan', value: '90d' },
+      { field: 'engagementScore', operator: 'lt', value: 50 }
+    ]
+  }
+];
+```
+
+## Performance Indicators
+
+Track key performance indicators (KPIs) to measure success and identify areas for improvement.
+
+### Client Health Score
+
+```typescript
+interface HealthScore {
+  score: number;              // 0-100
+  factors: {
+    engagement: number;       // Recent activity level
+    satisfaction: number;     // Survey scores
+    revenue: number;          // Payment history
+    longevity: number;        // Relationship duration
+  };
+  trend: 'improving' | 'stable' | 'declining';
+  risk: 'low' | 'medium' | 'high';
+}
+
+const example: HealthScore = {
+  score: 87,
+  factors: {
+    engagement: 92,
+    satisfaction: 85,
+    revenue: 95,
+    longevity: 78
+  },
+  trend: 'improving',
+  risk: 'low'
+};
+```
+
+<CardGroup cols={3}>
+  <Card title="Healthy" icon="circle-check" iconType="solid" color="#10b981">
+    Score: 80-100
+    
+    Strong engagement, on-time payments, positive feedback
+  </Card>
+  <Card title="At Risk" icon="circle-exclamation" iconType="solid" color="#f59e0b">
+    Score: 50-79
+    
+    Declining activity, payment delays, or negative signals
+  </Card>
+  <Card title="Critical" icon="circle-xmark" iconType="solid" color="#ef4444">
+    Score: 0-49
+    
+    Minimal engagement, overdue payments, escalations
+  </Card>
+</CardGroup>
+
+## Quick Actions
+
+Access frequently used functions directly from the dashboard for improved efficiency.
+
+<CardGroup cols={2}>
+  <Card title="Add New Client" icon="plus">
+    Quickly create a new client profile without navigating away
+  </Card>
+  <Card title="Log Activity" icon="pen">
+    Record a note, call, or meeting in seconds
+  </Card>
+  <Card title="Send Email" icon="envelope">
+    Compose and send emails to clients directly
+  </Card>
+  <Card title="Schedule Meeting" icon="calendar-plus">
+    Set up meetings with automatic calendar integration
+  </Card>
+  <Card title="Upload Document" icon="file-arrow-up">
+    Add files to client records instantly
+  </Card>
+  <Card title="Generate Report" icon="file-chart-pie">
+    Create ad-hoc reports for immediate analysis
+  </Card>
+</CardGroup>
+
+<Note>
+  Quick actions are context-aware and will adapt based on your recent activity and frequently used features.
+</Note>
+
+## Mobile Dashboard
+
+Access key metrics and perform essential tasks from mobile devices.
+
+### Mobile-Optimized Features
+
+```typescript
+const mobileFeatures = {
+  metrics: {
+    layout: 'vertical-stack',
+    widgets: ['clients', 'revenue', 'activities'],
+    gestures: ['swipe-refresh', 'tap-to-expand']
+  },
+  quickActions: [
+    'add-note',
+    'log-call',
+    'view-client',
+    'send-email'
+  ],
+  offline: {
+    cacheMetrics: true,
+    syncOnReconnect: true
+  }
+};
+```
+
+<Info>
+  The mobile dashboard automatically adapts to your screen size and provides touch-optimized controls for easy navigation.
+</Info>

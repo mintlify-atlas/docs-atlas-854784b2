@@ -1,0 +1,571 @@
+---
+title: 'Table Components'
+description: 'Data tables, grids, and list components for displaying client and project data'
+icon: 'table'
+---
+
+## Overview
+
+Solarecliente's table components provide powerful data display capabilities with built-in sorting, filtering, pagination, and row actions. All tables are responsive and accessible.
+
+## DataTable Component
+
+The primary component for displaying tabular data with full feature support.
+
+### Basic Usage
+
+```typescript
+import { DataTable } from '@/components/tables';
+import { ColumnDef } from '@/types/table';
+
+const columns: ColumnDef[] = [
+  {
+    key: 'name',
+    header: 'Client Name',
+    sortable: true,
+  },
+  {
+    key: 'email',
+    header: 'Email',
+    sortable: true,
+  },
+  {
+    key: 'status',
+    header: 'Status',
+    sortable: true,
+  },
+];
+
+function ClientList() {
+  const { data, loading } = useClients();
+
+  return (
+    <DataTable
+      columns={columns}
+      data={data}
+      loading={loading}
+    />
+  );
+}
+```
+
+### DataTable Props
+
+<ParamField path="columns" type="ColumnDef[]" required>
+  Array of column definitions specifying how data should be displayed
+</ParamField>
+
+<ParamField path="data" type="any[]" required>
+  Array of data objects to display in the table
+</ParamField>
+
+<ParamField path="loading" type="boolean" default={false}>
+  Show loading skeleton while data is being fetched
+</ParamField>
+
+<ParamField path="sortable" type="boolean" default={true}>
+  Enable column sorting functionality
+</ParamField>
+
+<ParamField path="filterable" type="boolean" default={true}>
+  Enable column filtering functionality
+</ParamField>
+
+<ParamField path="pagination" type="boolean | PaginationConfig" default={true}>
+  Enable pagination or provide custom pagination configuration
+</ParamField>
+
+<ParamField path="selectable" type="boolean" default={false}>
+  Enable row selection with checkboxes
+</ParamField>
+
+<ParamField path="onRowClick" type="function">
+  Callback function when a row is clicked
+</ParamField>
+
+<ParamField path="rowActions" type="RowAction[]">
+  Array of action buttons to display for each row
+</ParamField>
+
+## Column Definitions
+
+Define how each column should render and behave.
+
+<Tabs>
+  <Tab title="Basic Column">
+    ```typescript
+    {
+      key: 'name',
+      header: 'Client Name',
+      sortable: true,
+      width: '200px',
+    }
+    ```
+  </Tab>
+  <Tab title="Custom Render">
+    ```typescript
+    {
+      key: 'status',
+      header: 'Status',
+      render: (value, row) => (
+        <Badge
+          variant={value === 'active' ? 'success' : 'secondary'}
+        >
+          {value}
+        </Badge>
+      ),
+    }
+    ```
+  </Tab>
+  <Tab title="Formatted Value">
+    ```typescript
+    {
+      key: 'installationDate',
+      header: 'Installation Date',
+      sortable: true,
+      render: (value) => new Date(value).toLocaleDateString(),
+    }
+    ```
+  </Tab>
+  <Tab title="Nested Data">
+    ```typescript
+    {
+      key: 'address.city',
+      header: 'City',
+      accessor: (row) => row.address?.city || 'N/A',
+    }
+    ```
+  </Tab>
+</Tabs>
+
+### Column Configuration
+
+<ParamField path="key" type="string" required>
+  Unique identifier for the column
+</ParamField>
+
+<ParamField path="header" type="string | ReactNode" required>
+  Column header text or component
+</ParamField>
+
+<ParamField path="sortable" type="boolean" default={false}>
+  Enable sorting for this column
+</ParamField>
+
+<ParamField path="filterable" type="boolean" default={false}>
+  Enable filtering for this column
+</ParamField>
+
+<ParamField path="width" type="string">
+  Column width (e.g., '200px', '20%', 'auto')
+</ParamField>
+
+<ParamField path="render" type="function">
+  Custom render function: `(value, row, index) => ReactNode`
+</ParamField>
+
+<ParamField path="accessor" type="function">
+  Custom accessor function to extract data: `(row) => any`
+</ParamField>
+
+## Sorting
+
+Enable single or multi-column sorting.
+
+<CodeGroup>
+```typescript Single Sort
+<DataTable
+  columns={columns}
+  data={data}
+  sortable
+  defaultSort={{ key: 'name', direction: 'asc' }}
+/>
+```
+
+```typescript Multi Sort
+<DataTable
+  columns={columns}
+  data={data}
+  sortable
+  multiSort
+  defaultSort={[
+    { key: 'status', direction: 'asc' },
+    { key: 'name', direction: 'asc' },
+  ]}
+/>
+```
+
+```typescript Custom Sort
+const columns = [
+  {
+    key: 'installationDate',
+    header: 'Installation Date',
+    sortable: true,
+    sortFn: (a, b) => {
+      return new Date(a).getTime() - new Date(b).getTime();
+    },
+  },
+];
+```
+</CodeGroup>
+
+## Filtering
+
+Provide flexible filtering options for users.
+
+```typescript
+const columns = [
+  {
+    key: 'status',
+    header: 'Status',
+    filterable: true,
+    filterType: 'select',
+    filterOptions: [
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+      { value: 'pending', label: 'Pending' },
+    ],
+  },
+  {
+    key: 'name',
+    header: 'Client Name',
+    filterable: true,
+    filterType: 'text',
+    filterPlaceholder: 'Search clients...',
+  },
+  {
+    key: 'installationDate',
+    header: 'Installation Date',
+    filterable: true,
+    filterType: 'date',
+  },
+];
+
+<DataTable
+  columns={columns}
+  data={data}
+  filterable
+  showFilterBar
+/>
+```
+
+### Filter Types
+
+<CardGroup cols={2}>
+  <Card title="Text Filter" icon="input-text">
+    Free-form text search with debouncing
+  </Card>
+  <Card title="Select Filter" icon="list-dropdown">
+    Dropdown selection from predefined options
+  </Card>
+  <Card title="Date Filter" icon="calendar">
+    Date range picker for temporal filtering
+  </Card>
+  <Card title="Number Filter" icon="hashtag">
+    Numeric range with min/max inputs
+  </Card>
+</CardGroup>
+
+## Pagination
+
+Customize pagination behavior and appearance.
+
+<Tabs>
+  <Tab title="Basic">
+    ```typescript
+    <DataTable
+      columns={columns}
+      data={data}
+      pagination
+    />
+    ```
+  </Tab>
+  <Tab title="Custom Config">
+    ```typescript
+    <DataTable
+      columns={columns}
+      data={data}
+      pagination={{
+        pageSize: 25,
+        pageSizeOptions: [10, 25, 50, 100],
+        showTotal: true,
+        showQuickJumper: true,
+      }}
+    />
+    ```
+  </Tab>
+  <Tab title="Server-Side">
+    ```typescript
+    function ClientTable() {
+      const [page, setPage] = useState(1);
+      const [pageSize, setPageSize] = useState(25);
+      const { data, total } = useClients({ page, pageSize });
+
+      return (
+        <DataTable
+          columns={columns}
+          data={data}
+          pagination={{
+            current: page,
+            pageSize,
+            total,
+            onChange: setPage,
+            onPageSizeChange: setPageSize,
+          }}
+        />
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Row Actions
+
+Add action buttons for each row.
+
+```typescript
+const rowActions = [
+  {
+    label: 'View',
+    icon: 'eye',
+    onClick: (row) => navigate(`/clients/${row.id}`),
+  },
+  {
+    label: 'Edit',
+    icon: 'pencil',
+    onClick: (row) => openEditModal(row),
+  },
+  {
+    label: 'Delete',
+    icon: 'trash',
+    variant: 'danger',
+    onClick: (row) => handleDelete(row.id),
+    confirm: {
+      title: 'Delete Client',
+      message: 'Are you sure you want to delete this client?',
+    },
+  },
+];
+
+<DataTable
+  columns={columns}
+  data={data}
+  rowActions={rowActions}
+/>
+```
+
+## Row Selection
+
+Enable multi-row selection for batch operations.
+
+```typescript
+function ClientTable() {
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  const handleBulkDelete = () => {
+    const ids = selectedRows.map(row => row.id);
+    deleteClients(ids);
+  };
+
+  return (
+    <>
+      {selectedRows.length > 0 && (
+        <div className="bulk-actions">
+          <span>{selectedRows.length} selected</span>
+          <Button onClick={handleBulkDelete} variant="danger">
+            Delete Selected
+          </Button>
+        </div>
+      )}
+      <DataTable
+        columns={columns}
+        data={data}
+        selectable
+        selectedRows={selectedRows}
+        onSelectionChange={setSelectedRows}
+      />
+    </>
+  );
+}
+```
+
+## Expandable Rows
+
+Show additional details in expandable row sections.
+
+```typescript
+const columns = [
+  // ... regular columns
+];
+
+const expandedRowRender = (row) => (
+  <div className="p-4 bg-gray-50">
+    <h4 className="font-semibold mb-2">Additional Details</h4>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <span className="text-gray-600">Address:</span>
+        <p>{row.address}</p>
+      </div>
+      <div>
+        <span className="text-gray-600">Phone:</span>
+        <p>{row.phone}</p>
+      </div>
+      <div>
+        <span className="text-gray-600">Installation Notes:</span>
+        <p>{row.notes}</p>
+      </div>
+    </div>
+  </div>
+);
+
+<DataTable
+  columns={columns}
+  data={data}
+  expandable
+  expandedRowRender={expandedRowRender}
+/>
+```
+
+## Complete Example
+
+```typescript
+import { DataTable, ColumnDef } from '@/components/tables';
+import { Badge, Button } from '@/components/ui';
+import { useClients } from '@/hooks/useClients';
+
+function ClientManagement() {
+  const { data, loading, refetch } = useClients();
+  const navigate = useNavigate();
+
+  const columns: ColumnDef[] = [
+    {
+      key: 'name',
+      header: 'Client Name',
+      sortable: true,
+      filterable: true,
+      filterType: 'text',
+      width: '200px',
+    },
+    {
+      key: 'email',
+      header: 'Email',
+      sortable: true,
+      filterable: true,
+      filterType: 'text',
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      sortable: true,
+      filterable: true,
+      filterType: 'select',
+      filterOptions: [
+        { value: 'active', label: 'Active' },
+        { value: 'inactive', label: 'Inactive' },
+        { value: 'pending', label: 'Pending' },
+      ],
+      render: (value) => (
+        <Badge
+          variant={
+            value === 'active' ? 'success' :
+            value === 'pending' ? 'warning' : 'secondary'
+          }
+        >
+          {value}
+        </Badge>
+      ),
+    },
+    {
+      key: 'installationDate',
+      header: 'Installation Date',
+      sortable: true,
+      filterable: true,
+      filterType: 'date',
+      render: (value) => new Date(value).toLocaleDateString(),
+    },
+    {
+      key: 'panelCount',
+      header: 'Panels',
+      sortable: true,
+      width: '100px',
+    },
+    {
+      key: 'systemSize',
+      header: 'System Size (kW)',
+      sortable: true,
+      render: (value) => `${value.toFixed(2)} kW`,
+    },
+  ];
+
+  const rowActions = [
+    {
+      label: 'View',
+      icon: 'eye',
+      onClick: (row) => navigate(`/clients/${row.id}`),
+    },
+    {
+      label: 'Edit',
+      icon: 'pencil',
+      onClick: (row) => navigate(`/clients/${row.id}/edit`),
+    },
+    {
+      label: 'Delete',
+      icon: 'trash',
+      variant: 'danger',
+      onClick: async (row) => {
+        await deleteClient(row.id);
+        refetch();
+      },
+      confirm: {
+        title: 'Delete Client',
+        message: `Are you sure you want to delete ${row.name}?`,
+      },
+    },
+  ];
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Client Management</h1>
+        <Button onClick={() => navigate('/clients/new')}>
+          Add New Client
+        </Button>
+      </div>
+
+      <DataTable
+        columns={columns}
+        data={data}
+        loading={loading}
+        sortable
+        filterable
+        pagination={{
+          pageSize: 25,
+          pageSizeOptions: [10, 25, 50, 100],
+          showTotal: true,
+        }}
+        selectable
+        rowActions={rowActions}
+        onRowClick={(row) => navigate(`/clients/${row.id}`)}
+        defaultSort={{ key: 'name', direction: 'asc' }}
+      />
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Virtual Scrolling" icon="arrows-up-down">
+    Use virtual scrolling for tables with 1000+ rows to maintain performance
+  </Card>
+  <Card title="Debounce Filters" icon="clock">
+    Debounce text filter inputs to reduce unnecessary filtering operations
+  </Card>
+  <Card title="Server-Side Pagination" icon="server">
+    Use server-side pagination for large datasets to reduce initial load time
+  </Card>
+  <Card title="Loading States" icon="spinner">
+    Show skeleton loaders while data is being fetched for better UX
+  </Card>
+</CardGroup>

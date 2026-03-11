@@ -1,0 +1,159 @@
+---
+title: 'API Overview'
+description: 'Introduction to the Solarecliente API'
+icon: 'globe'
+---
+
+## Introduction
+
+The Solarecliente API provides a comprehensive RESTful interface for managing solar energy clients, projects, installations, and related data. This API enables seamless integration with your existing systems and workflows.
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/api/authentication">
+    Learn how to authenticate your API requests
+  </Card>
+  <Card title="Endpoints" icon="code" href="/api/endpoints">
+    Explore all available API endpoints
+  </Card>
+  <Card title="Rate Limits" icon="gauge">
+    Up to 1000 requests per hour per API key
+  </Card>
+  <Card title="Support" icon="life-ring">
+    Contact our support team for assistance
+  </Card>
+</CardGroup>
+
+## Base URL
+
+All API requests should be made to:
+
+```text
+https://api.solarecliente.com/v1
+```
+
+## Request Format
+
+The API accepts JSON-formatted request bodies. Ensure you include the appropriate `Content-Type` header:
+
+```http
+Content-Type: application/json
+```
+
+## Response Format
+
+All API responses are returned in JSON format with the following structure:
+
+### Success Response
+
+```json
+{
+  "success": true,
+  "data": {
+    // Response data
+  },
+  "meta": {
+    "timestamp": "2026-03-11T10:30:00Z",
+    "requestId": "req_abc123"
+  }
+}
+```
+
+### Error Response
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "Descriptive error message",
+    "details": {}
+  },
+  "meta": {
+    "timestamp": "2026-03-11T10:30:00Z",
+    "requestId": "req_abc123"
+  }
+}
+```
+
+## HTTP Status Codes
+
+The API uses standard HTTP status codes:
+
+| Status Code | Description |
+|-------------|-------------|
+| `200` | Success - Request completed successfully |
+| `201` | Created - Resource created successfully |
+| `400` | Bad Request - Invalid request parameters |
+| `401` | Unauthorized - Missing or invalid authentication |
+| `403` | Forbidden - Insufficient permissions |
+| `404` | Not Found - Resource not found |
+| `429` | Too Many Requests - Rate limit exceeded |
+| `500` | Internal Server Error - Server error |
+
+## Pagination
+
+Endpoints that return lists support pagination using query parameters:
+
+<ParamField query="page" type="integer" default="1">
+  Page number to retrieve
+</ParamField>
+
+<ParamField query="limit" type="integer" default="20">
+  Number of items per page (max: 100)
+</ParamField>
+
+### Pagination Response
+
+```json
+{
+  "success": true,
+  "data": [
+    // Array of items
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 150,
+      "totalPages": 8
+    }
+  }
+}
+```
+
+## Rate Limiting
+
+API requests are limited to:
+
+- **1000 requests per hour** per API key
+- Rate limit information is included in response headers:
+
+```http
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 950
+X-RateLimit-Reset: 1678534200
+```
+
+## Versioning
+
+The API is versioned through the URL path (`/v1`). We maintain backwards compatibility and provide advance notice of any breaking changes.
+
+## SDKs and Libraries
+
+<CardGroup cols={3}>
+  <Card title="JavaScript" icon="js">
+    ```bash
+    npm install @solarecliente/sdk
+    ```
+  </Card>
+  <Card title="Python" icon="python">
+    ```bash
+    pip install solarecliente
+    ```
+  </Card>
+  <Card title="PHP" icon="php">
+    ```bash
+    composer require solarecliente/sdk
+    ```
+  </Card>
+</CardGroup>
